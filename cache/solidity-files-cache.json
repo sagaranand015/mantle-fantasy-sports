@@ -1,0 +1,75 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "/Users/sagaranand/Documents/workspace-open/mantle-hack/demo02/contracts/Datastore.sol": {
+      "lastModificationDate": 1676308077728,
+      "contentHash": "9fafa7bd11fa64b4d3ebfaefad55f89e",
+      "sourceName": "contracts/Datastore.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.4.22 <0.9.0"
+      ],
+      "artifacts": [
+        "Datastore"
+      ]
+    },
+    "/Users/sagaranand/Documents/workspace-open/mantle-hack/demo02/contracts/LeagueX3.sol": {
+      "lastModificationDate": 1676367835072,
+      "contentHash": "a863f1bccaa2d8fb309ab63187aff13b",
+      "sourceName": "contracts/LeagueX3.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.4.22 <0.9.0"
+      ],
+      "artifacts": [
+        "LeagueX3"
+      ]
+    }
+  }
+}

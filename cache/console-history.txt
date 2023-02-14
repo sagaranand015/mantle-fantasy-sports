@@ -1,0 +1,50 @@
+await leagueX3.get_user_league_participation("0xf4267F20B463421D2cF3db534491b7920F79Ac4F", "leagueIpfsLink01");
+await leagueX3.get_user_league_participation("0xf4267F20B463421D2cF3db534491b7920F79Ac4F", "leagueIpfsLink02");
+await leagueX3.get_all_user_participation("0xf4267F20B463421D2cF3db534491b7920F79Ac4F");
+await leagueX3.user_participate("0xf4267F20B463421D2cF3db534491b7920F79Ac4F", "leagueIpfsLink02", "c4F-Squad03");
+await leagueX3.user_participate("0xf4267F20B463421D2cF3db534491b7920F79Ac4F", "leagueIpfsLink01", "c4F-Squad02");
+await leagueX3.get_user_league_participation("0xf4267F20B463421D2cF3db534491b7920F79Ac4F", "leagueIpfsLink012");
+await leagueX3.get_user_league_participation("0xf4267F20B463421D2cF3db534491b7920F79Ac4F", "leagueIpfsLink01");
+await leagueX3.get_all_user_participation("0xf4267F20B463421D2cF3db534491b7920F79Ac4F");
+await leagueX3.user_participate("0xf4267F20B463421D2cF3db534491b7920F79Ac4F", "leagueIpfsLink01", "c4F-Squad01");
+await leagueX3.GetLeagues("match02");
+await leagueX3.GetLeagues("match01");
+await leagueX3.CreateUpdateLeague("match02", "Match02leagueIpfsLink02", 10);
+await leagueX3.CreateUpdateLeague("match02", "Match02leagueIpfsLink01", 5);
+await leagueX3.CreateUpdateLeague("match01", "leagueIpfsLink02", 5);
+await leagueX3.CreateUpdateLeague("match01", "leagueIpfsLink01", 5);
+const leagueX3 = await l.attach("0x53b21646a2b013eb17898915466e400AeD9f18D5");
+const l = await ethers.getContractFactory("LeagueX3");
+await leagueX3.user_participate("0xf4267F20B463421D2cF3db534491b7920F79Ac4F", "leagueIpfsLink01", "c4F-Squad01");
+await leagueX3.CreateUpdateLeague("match02", "Match02leagueIpfsLink01", 5);
+await leagueX3.CreateUpdateLeague("match01", "leagueIpfsLink02", 5);
+await leagueX3.CreateUpdateLeague("match01", "leagueIpfsLink01", 5);
+const leagueX3 = await l.attach("0xA1f1CE99287fb47E66e2aA56593a5Faf9DB8c10f");
+const l = await ethers.getContractFactory("LeagueX3");
+await leagueX3.user_participate("0xf4267F20B463421D2cF3db534491b7920F79Ac4F", "leagueIpfsLink01", "c4F-Squad01");
+await leagueX3.user_participate(0xf4267F20B463421D2cF3db534491b7920F79Ac4F, "leagueIpfsLink01", "c4F-Squad01");
+await leagueX3.user_participate("0xf4267F20B463421D2cF3db534491b7920F79Ac4F", "leagueIpfsLink01", "c4F-Squad01");
+await leagueX3.GetLeagues("match02");
+await leagueX3.GetLeagues("match0=2");
+await leagueX3.CreateUpdateLeague("match02", "Match02leagueIpfsLink01", 5);
+await leagueX3.CreateUpdateLeague("match01", "leagueIpfsLink02", 5);
+await leagueX3.GetLeagues("match01");
+await leagueX3.CreateUpdateLeague("match01", "leagueIpfsLink01", 5);
+const leagueX3 = await l.attach("0x629D77170a87baD851212D084d7aFaC2A5ADBF37");
+const l = await ethers.getContractFactory("LeagueX3");
+await leagueX3.GetLeagues("match03");
+await leagueX3.GetLeagues("match01");
+await leagueX3.CreateUpdateLeague("match01", "leagueIpfsLink02", 5);
+await leagueX3.GetLeagues("match02");
+await leagueX3.GetLeagues("match01");
+await leagueX3.GetLeagues("match02");
+await leagueX3.CreateUpdateLeague("match02", "leagueIpfsLink02", 1);
+await leagueX3.GetLeagues("match01");
+await leagueX3.CreateUpdateLeague("match01", "leagueIpfsLink01", 10);
+const leagueX3 = await l.attach("0x4b7C0419871A28C1629CdAfCAbe815A138aEE632");
+const l = await ethers.getContractFactory("LeagueX3");
+await leagueX3.GetLeagues("matchCid")
+await leagueX3.CreateUpdateLeague("matchCid", "leagueIpfsLink")
+await leagueX3.GetLeagues("matchCid")
+const leagueX3 = await lx3.attach("0xb200bBbD711bC7D1f83a982eC5B41A18154656e8")
+const lx3 = await ethers.getContractFactory("LeagueX3");

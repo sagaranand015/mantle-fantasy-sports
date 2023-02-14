@@ -1,0 +1,65 @@
+{
+    "userAddress": "SZ3K22H6MZ3A3ORYIVTAYMQMMBWVFOMJWXR3QCODNMJBQRIKBXN5PXX6AI",
+    "squads": [
+        {
+            "datastoreAppId": 156788073,
+            "squadName": "01 Squad",
+            "squadId": 1,
+            "createdAt": "1675786174",
+            "players": [
+                {
+                    "playerName": "Virat Kohli",
+                    "rating": "10",
+                    "role": "Batsman",
+                    "playerDetails": "ipfs://bafkreieu5hxn662idqac6htp7pyd6gmelkhopgmiw22l5dzhyfkrghy2le"
+                },
+                {
+                    "playerName": "Bumrah",
+                    "rating": "10",
+                    "role": "Bowler",
+                    "playerDetails": "ipfs://bafkreieu5hxn662idqac6htp7pyd6gmelkhopgmiw22l5dzhyfkrghy2le"
+                }
+            ]
+        },
+        {
+            "datastoreAppId": 156788073,
+            "squadName": "02 Squad",
+            "squadId": 2,
+            "createdAt": "1675786174",
+            "players": [
+                {
+                    "playerName": "Virat Kohli",
+                    "rating": "10",
+                    "role": "Batsman",
+                    "playerDetails": "ipfs://bafkreieu5hxn662idqac6htp7pyd6gmelkhopgmiw22l5dzhyfkrghy2le"
+                },
+                {
+                    "playerName": "Bumrah",
+                    "rating": "10",
+                    "role": "Bowler",
+                    "playerDetails": "ipfs://bafkreieu5hxn662idqac6htp7pyd6gmelkhopgmiw22l5dzhyfkrghy2le"
+                }
+            ]
+        },
+        {
+            "datastoreAppId": 156788073,
+            "squadName": "02 Squad",
+            "squadId": 2,
+            "createdAt": "1675786174",
+            "players": [
+                {
+                    "playerName": "Virat Kohli",
+                    "rating": "10",
+                    "role": "Batsman",
+                    "playerDetails": "ipfs://bafkreieu5hxn662idqac6htp7pyd6gmelkhopgmiw22l5dzhyfkrghy2le"
+                },
+                {
+                    "playerName": "Bumrah",
+                    "rating": "10",
+                    "role": "Bowler",
+                    "playerDetails": "ipfs://bafkreieu5hxn662idqac6htp7pyd6gmelkhopgmiw22l5dzhyfkrghy2le"
+                }
+            ]
+        }
+    ]
+}
