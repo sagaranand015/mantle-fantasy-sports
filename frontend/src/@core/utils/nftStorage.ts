@@ -6,15 +6,21 @@ export function GetStorageClient() {
     return client;
 }
 
-export function FetchDataFromIpfsLink(cid: string) {
+export function MakeIpfsLink(cid: string) {
     if (cid.startsWith('ipfs')) {
         cid = cid.replace('ipfs://', 'https://ipfs.io/ipfs/')
-        console.log("cid is:  ", cid);
-        return cid
+        return cid;
     } else {
         const url = `https://ipfs.io/ipfs/${cid}`;
-        console.log("final link from ipfs: ", url);
-        return url
+        return url;
+    }
+}
+
+export async function FetchDataFromIpfsLink(cid: string) {
+    var finalUrl = MakeIpfsLink(cid);
+    if (finalUrl) {
+        const resp = await fetch(finalUrl);
+        return await resp.json();
     }
 }
 

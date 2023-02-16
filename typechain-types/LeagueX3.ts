@@ -9,6 +9,7 @@ import type {
   CallOverrides,
   ContractTransaction,
   Overrides,
+  PayableOverrides,
   PopulatedTransaction,
   Signer,
   utils,
@@ -25,29 +26,56 @@ import type {
 
 export declare namespace LeagueX3 {
   export type LeagueDataStruct = {
-    ipfsLink: PromiseOrValue<string>;
+    name: PromiseOrValue<string>;
+    img: PromiseOrValue<string>;
+    metadata: PromiseOrValue<string>;
+    matchName: PromiseOrValue<string>;
+    teamA: PromiseOrValue<string>;
+    teamB: PromiseOrValue<string>;
+    isRunning: PromiseOrValue<boolean>;
+    isFinished: PromiseOrValue<boolean>;
+    leaguePrice: PromiseOrValue<BigNumberish>;
     squadLimit: PromiseOrValue<BigNumberish>;
   };
 
-  export type LeagueDataStructOutput = [string, number] & {
-    ipfsLink: string;
+  export type LeagueDataStructOutput = [
+    string,
+    string,
+    string,
+    string,
+    string,
+    string,
+    boolean,
+    boolean,
+    number,
+    number
+  ] & {
+    name: string;
+    img: string;
+    metadata: string;
+    matchName: string;
+    teamA: string;
+    teamB: string;
+    isRunning: boolean;
+    isFinished: boolean;
+    leaguePrice: number;
     squadLimit: number;
   };
 
   export type UserLeagueDataStruct = {
-    leagueDataLink: PromiseOrValue<string>;
+    leagueName: PromiseOrValue<string>;
     squads: PromiseOrValue<string>;
   };
 
   export type UserLeagueDataStructOutput = [string, string] & {
-    leagueDataLink: string;
+    leagueName: string;
     squads: string;
   };
 }
 
 export interface LeagueX3Interface extends utils.Interface {
   functions: {
-    "CreateUpdateLeague(string,string,uint16)": FunctionFragment;
+    "CreateUpdateLeague(string,string,string,string,string,string,bool,bool,uint32,uint8)": FunctionFragment;
     "GetLeagues(string)": FunctionFragment;
     "get_all_user_participation(address)": FunctionFragment;
     "get_user_league_participation(address,string)": FunctionFragment;
@@ -68,6 +96,13 @@ export interface LeagueX3Interface extends utils.Interface {
     values: [
       PromiseOrValue<string>,
       PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<boolean>,
+      PromiseOrValue<boolean>,
+      PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>
     ]
   ): string;
@@ -141,9 +176,16 @@ export interface LeagueX3 extends BaseContract {
 
   functions: {
     CreateUpdateLeague(
-      matchCid: PromiseOrValue<string>,
-      leagueIpfsLink: PromiseOrValue<string>,
-      sLimit: PromiseOrValue<BigNumberish>,
+      matchName: PromiseOrValue<string>,
+      name: PromiseOrValue<string>,
+      img: PromiseOrValue<string>,
+      metadata: PromiseOrValue<string>,
+      teamA: PromiseOrValue<string>,
+      teamB: PromiseOrValue<string>,
+      isRunning: PromiseOrValue<boolean>,
+      isFinished: PromiseOrValue<boolean>,
+      leaguePrice: PromiseOrValue<BigNumberish>,
+      squadLimit: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -159,7 +201,7 @@ export interface LeagueX3 extends BaseContract {
 
     get_user_league_participation(
       user_addr: PromiseOrValue<string>,
-      leagueLink: PromiseOrValue<string>,
+      leagueName: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<
       [string, LeagueX3.UserLeagueDataStructOutput] & {
@@ -170,16 +212,23 @@ export interface LeagueX3 extends BaseContract {
 
     user_participate(
       user_addr: PromiseOrValue<string>,
-      leagueLink: PromiseOrValue<string>,
+      leagueName: PromiseOrValue<string>,
       squadLink: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
 
   CreateUpdateLeague(
-    matchCid: PromiseOrValue<string>,
-    leagueIpfsLink: PromiseOrValue<string>,
-    sLimit: PromiseOrValue<BigNumberish>,
+    matchName: PromiseOrValue<string>,
+    name: PromiseOrValue<string>,
+    img: PromiseOrValue<string>,
+    metadata: PromiseOrValue<string>,
+    teamA: PromiseOrValue<string>,
+    teamB: PromiseOrValue<string>,
+    isRunning: PromiseOrValue<boolean>,
+    isFinished: PromiseOrValue<boolean>,
+    leaguePrice: PromiseOrValue<BigNumberish>,
+    squadLimit: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -195,7 +244,7 @@ export interface LeagueX3 extends BaseContract {
 
   get_user_league_participation(
     user_addr: PromiseOrValue<string>,
-    leagueLink: PromiseOrValue<string>,
+    leagueName: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<
     [string, LeagueX3.UserLeagueDataStructOutput] & {
@@ -206,18 +255,25 @@ export interface LeagueX3 extends BaseContract {
 
   user_participate(
     user_addr: PromiseOrValue<string>,
-    leagueLink: PromiseOrValue<string>,
+    leagueName: PromiseOrValue<string>,
     squadLink: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
     CreateUpdateLeague(
-      matchCid: PromiseOrValue<string>,
-      leagueIpfsLink: PromiseOrValue<string>,
-      sLimit: PromiseOrValue<BigNumberish>,
+      matchName: PromiseOrValue<string>,
+      name: PromiseOrValue<string>,
+      img: PromiseOrValue<string>,
+      metadata: PromiseOrValue<string>,
+      teamA: PromiseOrValue<string>,
+      teamB: PromiseOrValue<string>,
+      isRunning: PromiseOrValue<boolean>,
+      isFinished: PromiseOrValue<boolean>,
+      leaguePrice: PromiseOrValue<BigNumberish>,
+      squadLimit: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<[string, number]>;
+    ): Promise<LeagueX3.LeagueDataStructOutput>;
 
     GetLeagues(
       matchCid: PromiseOrValue<string>,
@@ -231,7 +287,7 @@ export interface LeagueX3 extends BaseContract {
 
     get_user_league_participation(
       user_addr: PromiseOrValue<string>,
-      leagueLink: PromiseOrValue<string>,
+      leagueName: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<
       [string, LeagueX3.UserLeagueDataStructOutput] & {
@@ -242,7 +298,7 @@ export interface LeagueX3 extends BaseContract {
 
     user_participate(
       user_addr: PromiseOrValue<string>,
-      leagueLink: PromiseOrValue<string>,
+      leagueName: PromiseOrValue<string>,
       squadLink: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[string, LeagueX3.UserLeagueDataStructOutput]>;
@@ -252,9 +308,16 @@ export interface LeagueX3 extends BaseContract {
 
   estimateGas: {
     CreateUpdateLeague(
-      matchCid: PromiseOrValue<string>,
-      leagueIpfsLink: PromiseOrValue<string>,
-      sLimit: PromiseOrValue<BigNumberish>,
+      matchName: PromiseOrValue<string>,
+      name: PromiseOrValue<string>,
+      img: PromiseOrValue<string>,
+      metadata: PromiseOrValue<string>,
+      teamA: PromiseOrValue<string>,
+      teamB: PromiseOrValue<string>,
+      isRunning: PromiseOrValue<boolean>,
+      isFinished: PromiseOrValue<boolean>,
+      leaguePrice: PromiseOrValue<BigNumberish>,
+      squadLimit: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -270,23 +333,30 @@ export interface LeagueX3 extends BaseContract {
 
     get_user_league_participation(
       user_addr: PromiseOrValue<string>,
-      leagueLink: PromiseOrValue<string>,
+      leagueName: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     user_participate(
       user_addr: PromiseOrValue<string>,
-      leagueLink: PromiseOrValue<string>,
+      leagueName: PromiseOrValue<string>,
       squadLink: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     CreateUpdateLeague(
-      matchCid: PromiseOrValue<string>,
-      leagueIpfsLink: PromiseOrValue<string>,
-      sLimit: PromiseOrValue<BigNumberish>,
+      matchName: PromiseOrValue<string>,
+      name: PromiseOrValue<string>,
+      img: PromiseOrValue<string>,
+      metadata: PromiseOrValue<string>,
+      teamA: PromiseOrValue<string>,
+      teamB: PromiseOrValue<string>,
+      isRunning: PromiseOrValue<boolean>,
+      isFinished: PromiseOrValue<boolean>,
+      leaguePrice: PromiseOrValue<BigNumberish>,
+      squadLimit: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -302,15 +372,15 @@ export interface LeagueX3 extends BaseContract {
 
     get_user_league_participation(
       user_addr: PromiseOrValue<string>,
-      leagueLink: PromiseOrValue<string>,
+      leagueName: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     user_participate(
       user_addr: PromiseOrValue<string>,
-      leagueLink: PromiseOrValue<string>,
+      leagueName: PromiseOrValue<string>,
       squadLink: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };
 }

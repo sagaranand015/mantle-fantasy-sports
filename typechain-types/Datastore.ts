@@ -4,6 +4,7 @@
 import type {
   BaseContract,
   BigNumber,
+  BigNumberish,
   BytesLike,
   CallOverrides,
   ContractTransaction,
@@ -22,10 +23,71 @@ import type {
   PromiseOrValue,
 } from "./common";
 
+export declare namespace Datastore {
+  export type MatchesStruct = {
+    name: PromiseOrValue<string>;
+    teamA: PromiseOrValue<string>;
+    teamB: PromiseOrValue<string>;
+    startDateTime: PromiseOrValue<BigNumberish>;
+    endDateTime: PromiseOrValue<BigNumberish>;
+    metadata: PromiseOrValue<string>;
+    isRunning: PromiseOrValue<boolean>;
+    isOpen: PromiseOrValue<boolean>;
+    isFinished: PromiseOrValue<boolean>;
+  };
+
+  export type MatchesStructOutput = [
+    string,
+    string,
+    string,
+    BigNumber,
+    BigNumber,
+    string,
+    boolean,
+    boolean,
+    boolean
+  ] & {
+    name: string;
+    teamA: string;
+    teamB: string;
+    startDateTime: BigNumber;
+    endDateTime: BigNumber;
+    metadata: string;
+    isRunning: boolean;
+    isOpen: boolean;
+    isFinished: boolean;
+  };
+
+  export type PlayersDataStruct = {
+    name: PromiseOrValue<string>;
+    metadata: PromiseOrValue<string>;
+    rating: PromiseOrValue<BigNumberish>;
+    role: PromiseOrValue<string>;
+    inSquad: PromiseOrValue<boolean>;
+    isPlaying: PromiseOrValue<boolean>;
+  };
+
+  export type PlayersDataStructOutput = [
+    string,
+    string,
+    number,
+    string,
+    boolean,
+    boolean
+  ] & {
+    name: string;
+    metadata: string;
+    rating: number;
+    role: string;
+    inSquad: boolean;
+    isPlaying: boolean;
+  };
+}
+
 export interface DatastoreInterface extends utils.Interface {
   functions: {
-    "CreateUpdateMatches(string,string)": FunctionFragment;
-    "CreateUpdateTeam(string,string)": FunctionFragment;
+    "CreateUpdateMatches(string,string,string,string,uint256,uint256,string,bool,bool,bool)": FunctionFragment;
+    "CreateUpdateTeam(string,string,string,uint16,string,bool,bool)": FunctionFragment;
     "GetMatches(string)": FunctionFragment;
     "GetTeamPlayers(string)": FunctionFragment;
   };
@@ -40,11 +102,30 @@ export interface DatastoreInterface extends utils.Interface {
 
   encodeFunctionData(
     functionFragment: "CreateUpdateMatches",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
+      PromiseOrValue<boolean>,
+      PromiseOrValue<boolean>,
+      PromiseOrValue<boolean>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "CreateUpdateTeam",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
+      PromiseOrValue<boolean>,
+      PromiseOrValue<boolean>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "GetMatches",
@@ -101,71 +182,110 @@ export interface Datastore extends BaseContract {
   functions: {
     CreateUpdateMatches(
       date: PromiseOrValue<string>,
-      matchesIpfsUrl: PromiseOrValue<string>,
+      matchName: PromiseOrValue<string>,
+      teamA: PromiseOrValue<string>,
+      teamB: PromiseOrValue<string>,
+      startTs: PromiseOrValue<BigNumberish>,
+      endTs: PromiseOrValue<BigNumberish>,
+      matchMeta: PromiseOrValue<string>,
+      isRunning: PromiseOrValue<boolean>,
+      isOpen: PromiseOrValue<boolean>,
+      isFinished: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     CreateUpdateTeam(
       team: PromiseOrValue<string>,
-      playersIpfsUrl: PromiseOrValue<string>,
+      pName: PromiseOrValue<string>,
+      pMetadata: PromiseOrValue<string>,
+      pRating: PromiseOrValue<BigNumberish>,
+      pRole: PromiseOrValue<string>,
+      inSquad: PromiseOrValue<boolean>,
+      isPlaying: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     GetMatches(
       date: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<[string, boolean]>;
+    ): Promise<[Datastore.MatchesStructOutput[]]>;
 
     GetTeamPlayers(
       team: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<[string, boolean]>;
+    ): Promise<[Datastore.PlayersDataStructOutput[]]>;
   };
 
   CreateUpdateMatches(
     date: PromiseOrValue<string>,
-    matchesIpfsUrl: PromiseOrValue<string>,
+    matchName: PromiseOrValue<string>,
+    teamA: PromiseOrValue<string>,
+    teamB: PromiseOrValue<string>,
+    startTs: PromiseOrValue<BigNumberish>,
+    endTs: PromiseOrValue<BigNumberish>,
+    matchMeta: PromiseOrValue<string>,
+    isRunning: PromiseOrValue<boolean>,
+    isOpen: PromiseOrValue<boolean>,
+    isFinished: PromiseOrValue<boolean>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   CreateUpdateTeam(
     team: PromiseOrValue<string>,
-    playersIpfsUrl: PromiseOrValue<string>,
+    pName: PromiseOrValue<string>,
+    pMetadata: PromiseOrValue<string>,
+    pRating: PromiseOrValue<BigNumberish>,
+    pRole: PromiseOrValue<string>,
+    inSquad: PromiseOrValue<boolean>,
+    isPlaying: PromiseOrValue<boolean>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   GetMatches(
     date: PromiseOrValue<string>,
     overrides?: CallOverrides
-  ): Promise<[string, boolean]>;
+  ): Promise<Datastore.MatchesStructOutput[]>;
 
   GetTeamPlayers(
     team: PromiseOrValue<string>,
     overrides?: CallOverrides
-  ): Promise<[string, boolean]>;
+  ): Promise<Datastore.PlayersDataStructOutput[]>;
 
   callStatic: {
     CreateUpdateMatches(
       date: PromiseOrValue<string>,
-      matchesIpfsUrl: PromiseOrValue<string>,
+      matchName: PromiseOrValue<string>,
+      teamA: PromiseOrValue<string>,
+      teamB: PromiseOrValue<string>,
+      startTs: PromiseOrValue<BigNumberish>,
+      endTs: PromiseOrValue<BigNumberish>,
+      matchMeta: PromiseOrValue<string>,
+      isRunning: PromiseOrValue<boolean>,
+      isOpen: PromiseOrValue<boolean>,
+      isFinished: PromiseOrValue<boolean>,
       overrides?: CallOverrides
-    ): Promise<[string, boolean]>;
+    ): Promise<Datastore.MatchesStructOutput>;
 
     CreateUpdateTeam(
       team: PromiseOrValue<string>,
-      playersIpfsUrl: PromiseOrValue<string>,
+      pName: PromiseOrValue<string>,
+      pMetadata: PromiseOrValue<string>,
+      pRating: PromiseOrValue<BigNumberish>,
+      pRole: PromiseOrValue<string>,
+      inSquad: PromiseOrValue<boolean>,
+      isPlaying: PromiseOrValue<boolean>,
       overrides?: CallOverrides
-    ): Promise<[string, boolean]>;
+    ): Promise<Datastore.PlayersDataStructOutput>;
 
     GetMatches(
       date: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<[string, boolean]>;
+    ): Promise<Datastore.MatchesStructOutput[]>;
 
     GetTeamPlayers(
       team: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<[string, boolean]>;
+    ): Promise<Datastore.PlayersDataStructOutput[]>;
   };
 
   filters: {};
@@ -173,13 +293,26 @@ export interface Datastore extends BaseContract {
   estimateGas: {
     CreateUpdateMatches(
       date: PromiseOrValue<string>,
-      matchesIpfsUrl: PromiseOrValue<string>,
+      matchName: PromiseOrValue<string>,
+      teamA: PromiseOrValue<string>,
+      teamB: PromiseOrValue<string>,
+      startTs: PromiseOrValue<BigNumberish>,
+      endTs: PromiseOrValue<BigNumberish>,
+      matchMeta: PromiseOrValue<string>,
+      isRunning: PromiseOrValue<boolean>,
+      isOpen: PromiseOrValue<boolean>,
+      isFinished: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     CreateUpdateTeam(
       team: PromiseOrValue<string>,
-      playersIpfsUrl: PromiseOrValue<string>,
+      pName: PromiseOrValue<string>,
+      pMetadata: PromiseOrValue<string>,
+      pRating: PromiseOrValue<BigNumberish>,
+      pRole: PromiseOrValue<string>,
+      inSquad: PromiseOrValue<boolean>,
+      isPlaying: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -197,13 +330,26 @@ export interface Datastore extends BaseContract {
   populateTransaction: {
     CreateUpdateMatches(
       date: PromiseOrValue<string>,
-      matchesIpfsUrl: PromiseOrValue<string>,
+      matchName: PromiseOrValue<string>,
+      teamA: PromiseOrValue<string>,
+      teamB: PromiseOrValue<string>,
+      startTs: PromiseOrValue<BigNumberish>,
+      endTs: PromiseOrValue<BigNumberish>,
+      matchMeta: PromiseOrValue<string>,
+      isRunning: PromiseOrValue<boolean>,
+      isOpen: PromiseOrValue<boolean>,
+      isFinished: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     CreateUpdateTeam(
       team: PromiseOrValue<string>,
-      playersIpfsUrl: PromiseOrValue<string>,
+      pName: PromiseOrValue<string>,
+      pMetadata: PromiseOrValue<string>,
+      pRating: PromiseOrValue<BigNumberish>,
+      pRole: PromiseOrValue<string>,
+      inSquad: PromiseOrValue<boolean>,
+      isPlaying: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

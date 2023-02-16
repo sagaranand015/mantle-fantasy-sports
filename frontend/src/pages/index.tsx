@@ -24,6 +24,7 @@ import SalesByCountries from 'src/views/dashboard/SalesByCountries'
 import { useAuth } from 'src/configs/authProvider'
 import { useEffect, useState } from 'react'
 import HelpNotificationCard from 'src/views/cards/HelpNotificationCard'
+import AllMatches from './all-matches'
 
 const Dashboard = (props: any) => {
   const { currentAccount, setCurrentAccount } = useAuth()
@@ -41,22 +42,7 @@ const Dashboard = (props: any) => {
   return (
     <div>
       {accountConnected ? (
-        <ApexChartWrapper>
-          <Grid container spacing={6}>
-            <Grid item xs={12} md={4}>
-              <Trophy />
-            </Grid>
-            <Grid item xs={12} md={8}>
-              <StatisticsCard />
-            </Grid>
-            <Grid item xs={12} md={6} lg={6}>
-              <TotalEarning />
-            </Grid>
-            <Grid item xs={12} md={6} lg={6}>
-              <SalesByCountries />
-            </Grid>
-          </Grid>
-        </ApexChartWrapper>
+        <AllMatches />
       ) :
         (
           <HelpNotificationCard heading='Connect Wallet' content='Please connect your wallet to continue!' clickButtonText='Connect Wallet' clickButton={setCurrentAccount} />

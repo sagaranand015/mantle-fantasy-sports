@@ -71,7 +71,7 @@ const AllLeagues = (props: any) => {
   const [value, setValue] = useState<string>('account')
   const [allLeaguesData, setAllLeaguesData] = useState<ILeagueData[]>([])
   const [showLeaguesData, setShowLeaguesData] = useState<boolean>(false)
-  const { currentAccount, setCurrentAccount, disconnectAccount, apiToken, setApiToken } = useAuth()
+  const { currentAccount, setCurrentAccount } = useAuth()
   const [squadData, setSquadData] = useState<any>([])
   const [selectedLeague, setSelectedLeague] = useState<ILeagueData>()
   const [selectedSquad, setSelectedSquad] = useState<any>()
@@ -89,16 +89,6 @@ const AllLeagues = (props: any) => {
     if (props && props.leagues) {
       setAllLeaguesData(props.leagues.leagues)
       setShowLeaguesData(true)
-    }
-
-    if (showLeaguesData) {
-      (async () => {
-        const sqs = await getUserSquadData(apiToken)
-        if (sqs) {
-          setSquadData(sqs.squads)
-        }
-
-      })();
     }
   }, [showLeaguesData, props])
 
@@ -121,8 +111,8 @@ const AllLeagues = (props: any) => {
     const l_data = await GetLeagueDataIpfsLink(selectedLeague)
     const sq_data = await GetSquadDataIpfsLink(selectedSquad)
 
-    const participateResp = await ParticipateWithUserAddress(apiToken, l_data, sq_data)
-    console.log("participate response in page: ", l_data, sq_data, participateResp)
+    // const participateResp = await ParticipateWithUserAddress(apiToken, l_data, sq_data)
+    // console.log("participate response in page: ", l_data, sq_data, participateResp)
     settIsLoading(false)
     setModalOpen(false)
     alert("Participation Successful. Please navigate to My-leagues page to see your participation")

@@ -13,6 +13,8 @@ import Magnify from 'mdi-material-ui/Magnify'
 // ** Type Import
 import { Settings } from 'src/@core/context/settingsContext'
 
+import { ethers } from "ethers";
+
 // ** Components
 import ModeToggler from 'src/@core/layouts/components/shared-components/ModeToggler'
 import UserDropdown from 'src/@core/layouts/components/shared-components/UserDropdown'
@@ -38,16 +40,16 @@ const AppBarContent = (props: Props) => {
   const { hidden, settings, saveSettings, toggleNavVisibility } = props
 
   const { currentAccount, setCurrentAccount } = useAuth()
-  const [accountBalance, setAccountBalance] = useState(0)
 
+  // Note: Account Balance is not required for now, add later if required
+  // const [accountBalance, setAccountBalance] = useState(0)
   // useEffect(() => {
   //   const fetchAccountBalance = async (account: any) => {
-  //     const accountInfo = await client
-  //       .accountInformation(account)
-  //       .setIntDecoding(algosdk.IntDecoding.BIGINT)
-  //       .do();
-
-  //     setAccountBalance(Number(accountInfo.amount))
+  //     const provider = new ethers.providers.Web3Provider(window.ethereum)
+  //     if (currentAccount) {
+  //       const ethbalance = await provider.getBalance(currentAccount);
+  //       setAccountBalance(Number(ethbalance));
+  //     }
   //   }
 
   //   if (currentAccount) {
@@ -66,7 +68,7 @@ const AppBarContent = (props: Props) => {
         <ModeToggler settings={settings} saveSettings={saveSettings} />
         {currentAccount ? (
           <div className="flex items-center">
-            {/* <p className="mr-6 border px-4 py-2">{accountBalance} ALGO</p> */}
+            {/* <p className="mr-6 border px-4 py-2">{accountBalance} BIT</p> */}
             {/* onClick={disconnectAccount} */}
             <h4 className="cursor-pointer">{shortenAddress(currentAccount)}</h4>
           </div>

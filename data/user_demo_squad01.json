@@ -1,0 +1,38 @@
+{
+    "userAddress": "0xf4267F20B463421D2cF3db534491b7920F79Ac4F",
+    "squads": {
+        "squadName": "01 Squad",
+        "squadId": 1,
+        "createdAt": "1675786174",
+        "players": [
+            {
+                "playerName": "Virat Kohli",
+                "img": "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq",
+                "rating": "10",
+                "role": "Batsman",
+                "playerDetails": "ipfs://bafkreieu5hxn662idqac6htp7pyd6gmelkhopgmiw22l5dzhyfkrghy2le"
+            },
+            {
+                "playerName": "Bumrah",
+                "img": "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq",
+                "rating": "10",
+                "role": "Bowler",
+                "playerDetails": "ipfs://bafkreieu5hxn662idqac6htp7pyd6gmelkhopgmiw22l5dzhyfkrghy2le"
+            },
+            {
+                "playerName": "Steve Smith",
+                "img": "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq",
+                "rating": "10",
+                "role": "Batsman",
+                "playerDetails": "ipfs://bafkreieu5hxn662idqac6htp7pyd6gmelkhopgmiw22l5dzhyfkrghy2le"
+            },
+            {
+                "playerName": "Patt Cummins",
+                "img": "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq",
+                "rating": "10",
+                "role": "Bowler",
+                "playerDetails": "ipfs://bafkreieu5hxn662idqac6htp7pyd6gmelkhopgmiw22l5dzhyfkrghy2le"
+            }
+        ]
+    }
+}

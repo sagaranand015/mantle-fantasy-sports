@@ -2,7 +2,9 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { Datastore } from "./Datastore";
+export type { EscrowStore } from "./EscrowStore";
 export type { LeagueX3 } from "./LeagueX3";
 export * as factories from "./factories";
 export { Datastore__factory } from "./factories/Datastore__factory";
+export { EscrowStore__factory } from "./factories/EscrowStore__factory";
 export { LeagueX3__factory } from "./factories/LeagueX3__factory";
