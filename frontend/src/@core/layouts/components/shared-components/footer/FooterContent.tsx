@@ -17,8 +17,8 @@ const FooterContent = () => {
           ❤️
         </Box>
         {` for `}
-        <Link target='_blank' href='https://themeselection.com/'>
-          Algorand Gitcoin
+        <Link target='_blank' href='https://gitcoin.co'>
+          Gitcoin Mantle
         </Link>
       </Typography>
       {hidden ? null : (
@@ -31,7 +31,7 @@ const FooterContent = () => {
           </Link>
           <Link
             target='_blank'
-            href='https://github.com/sagaranand015/algorand-leagueX3/blob/main/README.md'
+            href='https://github.com/sagaranand015/mantle-fantasy-sports'
           >
             Project Documentation
           </Link>

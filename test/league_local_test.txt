@@ -1,0 +1,32 @@
+
+LeagueX3 SC deployed to 0x0cC9a106A0A42a390F60732bF209Df330F4ae6F0
+
+
+==== leagueX3 SC testing
+const l = await ethers.getContractFactory("LeagueX3");
+const leagueX3 = await l.attach("0x0cC9a106A0A42a390F60732bF209Df330F4ae6F0");
+
+await leagueX3.CreateUpdateLeague("India vs Australia WT20 WC League Match", "Welcome League for Beginners", "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", "ipfs://bafkreidud6zwwtqpmah76oig2lnpguy6grlrwxmnw763xl7vsvfvuwgtcq",  "INDIA", "AUSTRALIA", false, false, 20, 1);
+
+await leagueX3.CreateUpdateLeague("India vs Australia WT20 WC League Match", "Millionaire Elastic League", "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", "ipfs://bafkreidud6zwwtqpmah76oig2lnpguy6grlrwxmnw763xl7vsvfvuwgtcq",  "INDIA", "AUSTRALIA", false, false, 10, 1);
+
+await leagueX3.CreateUpdateLeague("India vs Australia WT20 WC League Match", "Infinity Battle Elastic League", "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", "ipfs://bafkreidud6zwwtqpmah76oig2lnpguy6grlrwxmnw763xl7vsvfvuwgtcq",  "INDIA", "AUSTRALIA", false, false, 200, 10);
+
+await leagueX3.GetLeagues("India vs Australia WT20 WC League Match");
+
+await leagueX3.get_all_user_participation("0xf4267F20B463421D2cF3db534491b7920F79Ac4F");
+
+await leagueX3.user_participate("0xf4267F20B463421D2cF3db534491b7920F79Ac4F", "leagueIpfsLink01", "c4F-Squad01", { value: ethers.utils.parseEther("20") });
+await leagueX3.user_participate("0xf4267F20B463421D2cF3db534491b7920F79Ac4F", "leagueIpfsLink01", "c4F-Squad02");
+await leagueX3.user_participate("0xf4267F20B463421D2cF3db534491b7920F79Ac4F", "leagueIpfsLink02", "c4F-Squad03");
+
+await leagueX3.CalculateLeaderboard("Welcome League for Beginners", "0xf4267F20B463421D2cF3db534491b7920F79Ac4F", 257);
+await leagueX3.CalculateLeaderboard("Welcome League for Beginners", "0xDeC6Df558e198A7745AcBe881f61B3506D59CFC4", 198);
+
+await leagueX3.GetLeagueLeaderboard("Welcome League for Beginners");
+
+await leagueX3.get_user_league_participation("0xf4267F20B463421D2cF3db534491b7920F79Ac4F", "leagueIpfsLink01");
+await leagueX3.get_user_league_participation("0xf4267F20B463421D2cF3db534491b7920F79Ac4F", "leagueIpfsLink02");
+
+
+// other account: 0xDeC6Df558e198A7745AcBe881f61B3506D59CFC4

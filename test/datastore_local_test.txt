@@ -1,0 +1,10 @@
+Datstore SC deployed to 0xAA322f48F9DFdA8e1caDFb34141E8D591c076001
+
+===== Datastore testing
+const d = await ethers.getContractFactory("Datastore");
+const dst = await d.attach("0xAA322f48F9DFdA8e1caDFb34141E8D591c076001");
+await dst.CreateUpdateMatches("1676592000", "India vs Australia Border Gavaskar Trophy 2nd Test Match", "INDIA", "AUSTRALIA", 1676592000, 1676851200, "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", false, true, false);
+
+await dst.CreateUpdateMatches("1676592000", "India vs Australia WT20 WC League Match", "INDIA", "AUSTRALIA", 1676592000, 1676678400, "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", false, true, false);
+
+await dst.GetMatches("1676592000");

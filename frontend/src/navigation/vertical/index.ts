@@ -32,7 +32,7 @@ const navigation = (): VerticalNavItemsType => {
     },
     {
       title: 'All Leagues',
-      icon: SendOutline,
+      icon: CreditCardOutline,
       path: '/all-leagues'
     },
     {

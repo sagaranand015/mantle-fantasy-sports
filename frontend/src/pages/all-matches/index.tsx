@@ -33,7 +33,7 @@ import { Avatar, AvatarGroup, Button, CardActions, CardContent, CardMedia, Colla
 
 import DatastoreAbi from '../../abis/Datastore.json';
 import { DATASTORE_CONTRACT } from 'src/utils/constants';
-import { GetDateStringFromDate, GetEpochTimestampForDate, GetRandomInt } from 'src/utils/utils';
+import { GetCurrentUTCDateString, GetDateStringFromDate, GetEpochDateTimestampForToday, GetEpochTimestampToday, GetRandomInt } from 'src/utils/utils';
 import { useAuth } from 'src/configs/authProvider';
 
 interface IMatchData {
@@ -60,23 +60,18 @@ const AllMatches = (props: any) => {
 
   async function getAllMatches(dateStr: string) {
     const resp = await dsContract.GetMatches(dateStr);
-    console.log("====== contract resp: ", resp);
+    console.log("====== contract resp: ", resp, dateStr);
     return resp;
   }
 
   useEffect(() => {
-    var today = new Date();
-    const todayTs = GetEpochTimestampForDate(GetDateStringFromDate(today));
+    const todayTs = GetEpochDateTimestampForToday();
     (async () => {
       const allMAtches = await getAllMatches(todayTs);
       setTodaysMatches(allMAtches);
-      console.log("======= today's matches are: ", todaysMatches);
+      // console.log("======= today's matches are: ", GetDateStringFromDate(today));
     })();
   }, []);
-
-  // function NavigateToLeagues(matchName: string) {
-
-  // }
 
   return (
     <>

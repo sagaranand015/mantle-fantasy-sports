@@ -33,7 +33,6 @@ import { Avatar, AvatarGroup, Button, CardActions, CardContent, CardMedia, Colla
 import Select from '@mui/material/Select';
 import LeagueAbi from '../../../abis/LeagueX3.json';
 import { DEMO_SQUAD01, DEMO_SQUAD02, LEAGUE_CONTRACT } from 'src/utils/constants';
-import { GetDateStringFromDate, GetEpochTimestampForDate, GetRandomInt } from 'src/utils/utils';
 import { useRouter } from 'next/router';
 import { GridProps } from '@mui/system';
 import { CartPlus, Facebook, GooglePlus, Linkedin, ShareVariant, Twitter } from 'mdi-material-ui';
@@ -231,7 +230,7 @@ const AllMatcheLeagues = (props: any) => {
                   <Grid container spacing={6}>
                     <StyledGrid item md={5} xs={12}>
                       <CardContent sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <img width={137} height={176} alt='Apple iPhone 11 Pro' src='/images/cards/iPhone-11-pro.png' />
+                        <img width={137} height={176} alt='Apple iPhone 11 Pro' src='/images/cricket-thumbnail.jpeg' />
                       </CardContent>
                     </StyledGrid>
                     <Grid
