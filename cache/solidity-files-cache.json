@@ -107,8 +107,8 @@
       ]
     },
     "/Users/sagaranand/Documents/workspace-open/mantle-hack/mantle-fantasy-sports/contracts/LeagueX3.sol": {
-      "lastModificationDate": 1676636729074,
-      "contentHash": "2ddfa1cde84998d0fb2a1344cbf03d3a",
+      "lastModificationDate": 1676816398344,
+      "contentHash": "9460de77fd69377552ba25a256e54434",
       "sourceName": "contracts/LeagueX3.sol",
       "solcConfig": {
         "version": "0.8.17",
@@ -139,41 +139,6 @@
       ],
       "artifacts": [
         "LeagueX3"
-      ]
-    },
-    "/Users/sagaranand/Documents/workspace-open/mantle-hack/mantle-fantasy-sports/contracts/EscrowStore.sol": {
-      "lastModificationDate": 1676567260946,
-      "contentHash": "0e225c99631e85f0472b991bc75d5d60",
-      "sourceName": "contracts/EscrowStore.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.17"
-      ],
-      "artifacts": [
-        "EscrowStore"
       ]
     }
   }

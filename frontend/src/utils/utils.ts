@@ -28,3 +28,20 @@ export function GetRandomInt() {
     }
     return n;
 }
+
+interface ILeagueMatch {
+    league: string;
+    match: string;
+}
+
+export function GetLeagueMatchFromLeagueName(leagueName: string): ILeagueMatch {
+    if (leagueName) {
+        const arr = leagueName.split(";;;");
+        const lName = arr[0];
+        const mName = arr[1];
+        var lm: ILeagueMatch = { league: lName, match: mName };
+        return lm;
+    }
+    return { league: "", match: "" };
+
+}

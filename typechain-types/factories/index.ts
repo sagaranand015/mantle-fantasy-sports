@@ -2,5 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 export { Datastore__factory } from "./Datastore__factory";
-export { EscrowStore__factory } from "./EscrowStore__factory";
 export { LeagueX3__factory } from "./LeagueX3__factory";

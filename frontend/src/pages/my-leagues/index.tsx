@@ -8,7 +8,7 @@ import Card from '@mui/material/Card'
 import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
 import TabContext from '@mui/lab/TabContext'
-import { styled } from '@mui/material/styles'
+import { responsiveFontSizes, styled } from '@mui/material/styles'
 import MuiTab, { TabProps } from '@mui/material/Tab'
 import Grid from '@mui/material/Grid'
 
@@ -29,8 +29,9 @@ import 'react-datepicker/dist/react-datepicker.css'
 
 import { FetchDataFromIpfsLink, GetLeagueDataIpfsLink, GetSquadDataIpfsLink } from 'src/@core/utils/nftStorage'
 import { ALL_LEAGUES } from 'src/@core/utils/constants'
-import { Avatar, AvatarGroup, Button, CardActions, CardContent, CardMedia, Collapse, Divider, FormControl, FormHelperText, IconButton, InputLabel, Menu, MenuItem, Modal, SelectChangeEvent, Typography } from '@mui/material';
-import Select from '@mui/material/Select';
+import { Avatar, AvatarGroup, Button, CardActions, CardContent, CardMedia, Collapse, Divider, FormControl, FormHelperText, IconButton, InputLabel, Menu, MenuItem, Modal, SelectChangeEvent, TableBody, TableCell, TableContainer, TableHead, Typography } from '@mui/material';
+import Table from '@mui/material/Table';
+import TableRow from '@mui/material/TableRow';
 import LeagueAbi from '../../abis/LeagueX3.json';
 import { DEMO_SQUAD01, DEMO_SQUAD02, LEAGUE_CONTRACT } from 'src/utils/constants';
 import { useRouter } from 'next/router';
@@ -38,6 +39,28 @@ import { GridProps } from '@mui/system';
 import { CartPlus, Facebook, GooglePlus, Linkedin, ShareVariant, Twitter } from 'mdi-material-ui';
 import { useAuth } from 'src/configs/authProvider';
 import { LoadingButton } from '@mui/lab';
+import { SlowBuffer } from 'buffer';
+import { GetLeagueMatchFromLeagueName } from 'src/utils/utils';
+
+interface Column {
+  id: 'userAddress' | 'totalPoints' | 'position'
+  label: string
+  minWidth?: number
+  align?: 'right'
+  format?: (value: number) => string
+}
+
+const columns: readonly Column[] = [
+  { id: 'userAddress', label: 'Address', minWidth: 170 },
+  { id: 'totalPoints', label: 'totalPoints', minWidth: 100 },
+  {
+    id: 'position',
+    label: 'position',
+    minWidth: 170,
+    align: 'right',
+    format: (value: number) => value.toLocaleString('en-US')
+  }
+]
 
 const StyledGrid = styled(Grid)<GridProps>(({ theme }) => ({
   display: 'flex',
@@ -68,9 +91,15 @@ interface IUserLeagueData {
   squads: string;
 };
 
-interface ISquadData {
-  squad: any;
-  squadLink: string;
+interface ILeaderboardData {
+  userAddress: string;
+  totalPoints: number;
+}
+
+interface ISortedLeaderboardData {
+  userAddress: string;
+  totalPoints: number;
+  position: number;
 }
 
 const UserLeagues = (props: any) => {
@@ -85,6 +114,8 @@ const UserLeagues = (props: any) => {
   }
 
   const [userLeagues, setUserLeagues] = useState<IUserLeagueData[]>([]);
+  const [leagueLeaderboard, setLeagueLeaderboard] = useState<ILeaderboardData[]>([]);
+  const [sortedLeaderboard, setSortedLeaderboard] = useState<ISortedLeaderboardData[]>([]);
   const { currentAccount, setCurrentAccount } = useAuth();
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -102,9 +133,47 @@ const UserLeagues = (props: any) => {
   const router = useRouter();
 
   async function getUserLeagues() {
-    const resp = await lContract.get_all_user_participation(currentAccount);
+    const resp = await lContract.GetAllUserParticipation(currentAccount);
     console.log("====== getUserLeagues contract resp: ", resp);
     return resp[1];
+  }
+
+  async function getLeagueLeaderboard(leagueName: string, matchName: string) {
+
+    console.log("==== getting leaderboard data: ", leagueName, matchName);
+
+    const resp = await lContract.GetLeagueLeaderboard(leagueName, matchName);
+    console.log("====== getLeagueLeaderboard contract resp: ", resp);
+    return resp;
+  }
+
+  function createSortedData(userAddress: string, totalPoints: number, position: number): ISortedLeaderboardData {
+    return { userAddress, totalPoints, position };
+  }
+
+  async function ShowLeaderboardModal(league: IUserLeagueData) {
+    const leagueMatch = GetLeagueMatchFromLeagueName(league.leagueName);
+    const resp = await getLeagueLeaderboard(leagueMatch.league, leagueMatch.match);
+    console.log("======= GetLeagueLeaderBoard are: ", resp);
+    if (resp) {
+      var toBeSorted: ILeaderboardData[] = [];
+      for (var i = 0; i < resp.length; i++) {
+        toBeSorted.push(resp[i]);
+      }
+      toBeSorted.sort(function (a: ILeaderboardData, b: ILeaderboardData) {
+        return b.totalPoints - a.totalPoints;
+      });
+
+      // array is sorted now
+      var localSorted: ISortedLeaderboardData[] = []
+      for (var i = 0; i < toBeSorted.length; i++) {
+        localSorted.push(createSortedData(toBeSorted[i].userAddress, toBeSorted[i].totalPoints, i + 1));
+      }
+      setSortedLeaderboard(localSorted);
+      setModalOpen(true);
+      setLeagueLeaderboard(toBeSorted);
+      console.log("======= leagueLeaderboard are: ", sortedLeaderboard);
+    }
   }
 
   useEffect(() => {
@@ -127,14 +196,39 @@ const UserLeagues = (props: any) => {
           <Grid container spacing={6}>
             <Grid item xs={12}>
               <Typography id="modal-modal-title" variant="h6" component="h2">
-                Participate in nothing
+                League Leaderboard
               </Typography>
             </Grid>
             <Grid item xs={12}>
-              {/* <Button variant='contained' sx={{ py: 2.5, width: '100%', borderTopLeftRadius: 0, borderTopRightRadius: 0 }} onClick={() => ConfirmParticipation()} disabled={isLoading}>
-                <LoadingButton loading={isLoading}></LoadingButton>
-                Confirm Participation with {selectedLeague?.leaguePrice} BIT
-              </Button> */}
+              <TableContainer sx={{ maxHeight: 440 }}>
+                <Table stickyHeader aria-label='sticky table'>
+                  <TableHead>
+                    <TableRow>
+                      {columns.map(column => (
+                        <TableCell key={column.id} align={column.align} sx={{ minWidth: column.minWidth }}>
+                          {column.label}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {sortedLeaderboard.map(row => {
+                      return (
+                        <TableRow hover role='checkbox' tabIndex={-1} key={row.userAddress}>
+                          {columns.map(column => {
+                            const value = row[column.id];
+                            return (
+                              <TableCell key={column.id} align={column.align}>
+                                {column.format && typeof value === 'number' ? column.format(value) : value}
+                              </TableCell>
+                            )
+                          })}
+                        </TableRow>
+                      )
+                    })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
             </Grid>
           </Grid>
         </Box>
@@ -148,7 +242,7 @@ const UserLeagues = (props: any) => {
                   <Grid container spacing={6}>
                     <StyledGrid item md={5} xs={12}>
                       <CardContent sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <img width={137} height={176} alt='Apple iPhone 11 Pro' src='/images/cards/iPhone-11-pro.png' />
+                        <img width={137} height={176} alt='Apple iPhone 11 Pro' src='/images/cricket-thumbnail.jpeg' />
                       </CardContent>
                     </StyledGrid>
                     <Grid
@@ -156,6 +250,7 @@ const UserLeagues = (props: any) => {
                       xs={12}
                       md={7}
                       sx={{
+                        display: 'flex', flexDirection: 'column', justifyContent: 'center',
                         paddingTop: ['0 !important', '0 !important', '1.5rem !important'],
                         paddingLeft: ['1.5rem !important', '1.5rem !important', '0 !important']
                       }}
@@ -164,26 +259,11 @@ const UserLeagues = (props: any) => {
                         <Typography variant='h6' sx={{ marginBottom: 2 }}>
                           {ul.leagueName}
                         </Typography>
-                        {/* <Typography variant='body2' sx={{ marginBottom: 3.5 }}>
-                          Apple iPhone 11 Pro smartphone. Announced Sep 2019. Features 5.8″ display Apple A13 Bionic
-                        </Typography> */}
-                        {/* <Typography sx={{ fontWeight: 500, marginBottom: 3 }}>
-                          Price:{' '}
-                          <Box component='span' sx={{ fontWeight: 'bold' }}>
-                            {ml.leaguePrice} BIT
-                          </Box>
-                        </Typography>
-                        <Typography sx={{ fontWeight: 500, marginBottom: 3 }}>
-                          Squad Limit:{' '}
-                          <Box component='span' sx={{ fontWeight: 'bold' }}>
-                            {ml.squadLimit}
-                          </Box>
-                        </Typography> */}
                       </CardContent>
                       <CardActions className='card-action-dense'>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                          {/* onClick={() => ShowLeaderBoard(ml)} */}
-                          <Button>
+
+                          <Button onClick={() => ShowLeaderboardModal(ul)}>
                             <CartPlus fontSize='small' sx={{ marginRight: 2 }} />
                             See Leaderboard
                           </Button>
@@ -228,7 +308,7 @@ const UserLeagues = (props: any) => {
             })
           )
             :
-            (<div>No User Leagues yet!</div>)
+            (<div>The connected account has not participated in any leagues!</div>)
         }
       </Grid>
     </div >

@@ -123,9 +123,14 @@ const AllMatcheLeagues = (props: any) => {
   }
 
   async function participateWithContractCall(leagueName: string, squadLink: string) {
-    const resp = await lContract.user_participate(currentAccount, leagueName, squadLink, { value: ethers.utils.parseEther("20") });
-    console.log("====== participateWithContractCall contract resp: ", resp);
-    return resp;
+    if (matchName) {
+      const resp = await lContract.UserParticipate(currentAccount, leagueName, matchName, squadLink, { value: ethers.utils.parseEther("20") });
+      console.log("====== participateWithContractCall contract resp: ", resp);
+      return resp;
+    }
+    alert("something went wrong! Please reload the page. ");
+    console.error("something went wrong! Please reload the page. ");
+    return;
   }
 
   async function GetAllUserDemoSquads() {

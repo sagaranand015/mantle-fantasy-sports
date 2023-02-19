@@ -47,12 +47,15 @@ contract LeagueX3 {
     address payable escrowAddr = payable(eAddr);
 
     function CalculateLeaderboard(
-        string memory legaueName,
+        string memory leagueName,
+        string memory matchName,
         address user_address,
         uint32 finalPoints
     ) public returns (leaderboardData[] memory) {
+        string memory finalNameSep = string.concat(leagueName, ";;;");
+        string memory finalName = string.concat(finalNameSep, matchName);
         leaderboardData[] storage allLeaderboards = leagueLeaderboard[
-            legaueName
+            finalName
         ];
         for (uint256 i = 0; i < allLeaderboards.length; i++) {
             if (allLeaderboards[i].userAddress == user_address) {
@@ -65,16 +68,17 @@ contract LeagueX3 {
             finalPoints
         );
         allLeaderboards.push(lbData);
-        leagueLeaderboard[legaueName] = allLeaderboards;
+        leagueLeaderboard[finalName] = allLeaderboards;
         return allLeaderboards;
     }
 
-    function GetLeagueLeaderboard(string memory leagueName)
-        public
-        view
-        returns (leaderboardData[] memory)
-    {
-        return leagueLeaderboard[leagueName];
+    function GetLeagueLeaderboard(
+        string memory leagueName,
+        string memory matchName
+    ) public view returns (leaderboardData[] memory) {
+        string memory finalNameSep = string.concat(leagueName, ";;;");
+        string memory finalName = string.concat(finalNameSep, matchName);
+        return leagueLeaderboard[finalName];
     }
 
     function CreateUpdateLeague(
@@ -132,19 +136,22 @@ contract LeagueX3 {
         return (allLeagues[matchCid]);
     }
 
-    function user_participate(
+    function UserParticipate(
         address user_addr,
         string memory leagueName,
+        string memory matchName,
         string memory squadLink
     ) public payable returns (address, userLeagueData memory) {
         (bool sent, bytes memory data) = escrowAddr.call{value: msg.value}("");
         require(sent, "Failed to Transfer leaguePrice");
         userLeagueData[] storage userLeagues = userParticipation[user_addr];
+        string memory finalNameSep = string.concat(leagueName, ";;;");
+        string memory finalName = string.concat(finalNameSep, matchName);
         for (uint256 i = 0; i < userLeagues.length; i++) {
             // Case for when the user is participating in the league with a subsequent squad
             if (
                 keccak256(bytes(userLeagues[i].leagueName)) ==
-                keccak256(bytes(leagueName))
+                keccak256(bytes(finalName))
             ) {
                 string memory userSquads = userLeagues[i].squads;
                 string memory addedSep = string.concat(userSquads, ";;;");
@@ -154,15 +161,24 @@ contract LeagueX3 {
             }
         }
         // Case for when the user is participating in a new league with the first squad
-        userLeagueData memory ul = userLeagueData(leagueName, squadLink);
+        userLeagueData memory ul = userLeagueData(finalName, squadLink);
         userLeagues.push(ul);
         userParticipation[user_addr] = userLeagues;
-        address[] storage allLeagueUsers = leagueUsers[leagueName];
+
+        // push to leagueUsers mapping
+        address[] storage allLeagueUsers = leagueUsers[finalName];
         allLeagueUsers.push(user_addr);
+
+        // push to leagueLeaderboard mapping
+        leaderboardData memory uleaderData = leaderboardData(user_addr, 0);
+        leaderboardData[] storage leaderBoardData = leagueLeaderboard[
+            finalName
+        ];
+        leaderBoardData.push(uleaderData);
         return (user_addr, ul);
     }
 
-    function get_all_user_participation(address user_addr)
+    function GetAllUserParticipation(address user_addr)
         public
         view
         returns (address, userLeagueData[] memory)
@@ -170,15 +186,16 @@ contract LeagueX3 {
         return (user_addr, userParticipation[user_addr]);
     }
 
-    function GetAllUsersForLeague(string memory leagueName)
-        public
-        view
-        returns (address[] memory)
-    {
-        return leagueUsers[leagueName];
+    function GetAllUsersForLeague(
+        string memory leagueName,
+        string memory matchName
+    ) public view returns (address[] memory) {
+        string memory finalNameSep = string.concat(leagueName, ";;;");
+        string memory finalName = string.concat(finalNameSep, matchName);
+        return leagueUsers[finalName];
     }
 
-    function get_user_league_participation(
+    function GetUserLeagueParticipation(
         address user_addr,
         string memory leagueName
     ) public view returns (address u_addr, userLeagueData memory u_league) {

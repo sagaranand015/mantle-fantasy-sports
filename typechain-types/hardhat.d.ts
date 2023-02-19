@@ -17,10 +17,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Datastore__factory>;
     getContractFactory(
-      name: "EscrowStore",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.EscrowStore__factory>;
-    getContractFactory(
       name: "LeagueX3",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.LeagueX3__factory>;
@@ -30,11 +26,6 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.Datastore>;
-    getContractAt(
-      name: "EscrowStore",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.EscrowStore>;
     getContractAt(
       name: "LeagueX3",
       address: string,

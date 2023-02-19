@@ -8,10 +8,10 @@ export function GetStorageClient() {
 
 export function MakeIpfsLink(cid: string) {
     if (cid.startsWith('ipfs')) {
-        cid = cid.replace('ipfs://', 'https://ipfs.io/ipfs/')
+        cid = cid.replace('ipfs://', 'https://nftstorage.link/ipfs/')
         return cid;
     } else {
-        const url = `https://ipfs.io/ipfs/${cid}`;
+        const url = `https://nftstorage.link/ipfs/${cid}`;
         return url;
     }
 }
