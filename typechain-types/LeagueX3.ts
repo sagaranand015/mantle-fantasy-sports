@@ -28,11 +28,29 @@ export declare namespace LeagueX3 {
   export type LeaderboardDataStruct = {
     userAddress: PromiseOrValue<string>;
     totalPoints: PromiseOrValue<BigNumberish>;
+    position: PromiseOrValue<BigNumberish>;
+    isWinner: PromiseOrValue<boolean>;
+    isRunnersUp: PromiseOrValue<boolean>;
+    isSecondRunnersUp: PromiseOrValue<boolean>;
+    isConsolationWinner: PromiseOrValue<boolean>;
   };
 
-  export type LeaderboardDataStructOutput = [string, number] & {
+  export type LeaderboardDataStructOutput = [
+    string,
+    number,
+    number,
+    boolean,
+    boolean,
+    boolean,
+    boolean
+  ] & {
     userAddress: string;
     totalPoints: number;
+    position: number;
+    isWinner: boolean;
+    isRunnersUp: boolean;
+    isSecondRunnersUp: boolean;
+    isConsolationWinner: boolean;
   };
 
   export type LeagueDataStruct = {
@@ -85,13 +103,14 @@ export declare namespace LeagueX3 {
 
 export interface LeagueX3Interface extends utils.Interface {
   functions: {
-    "CalculateLeaderboard(string,string,address,uint32)": FunctionFragment;
+    "CalculateLeaderboard(string,string,(address,uint32,uint32,bool,bool,bool,bool)[])": FunctionFragment;
     "CreateUpdateLeague(string,string,string,string,string,string,bool,bool,uint32,uint8)": FunctionFragment;
     "GetAllUserParticipation(address)": FunctionFragment;
     "GetAllUsersForLeague(string,string)": FunctionFragment;
     "GetLeagueLeaderboard(string,string)": FunctionFragment;
     "GetLeagues(string)": FunctionFragment;
     "GetUserLeagueParticipation(address,string)": FunctionFragment;
+    "SetFinalLeaderboard(string,string,(address,uint32,uint32,bool,bool,bool,bool)[])": FunctionFragment;
     "UserParticipate(address,string,string,string)": FunctionFragment;
   };
 
@@ -104,6 +123,7 @@ export interface LeagueX3Interface extends utils.Interface {
       | "GetLeagueLeaderboard"
       | "GetLeagues"
       | "GetUserLeagueParticipation"
+      | "SetFinalLeaderboard"
       | "UserParticipate"
   ): FunctionFragment;
 
@@ -112,8 +132,7 @@ export interface LeagueX3Interface extends utils.Interface {
     values: [
       PromiseOrValue<string>,
       PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
+      LeagueX3.LeaderboardDataStruct[]
     ]
   ): string;
   encodeFunctionData(
@@ -152,6 +171,14 @@ export interface LeagueX3Interface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
+    functionFragment: "SetFinalLeaderboard",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      LeagueX3.LeaderboardDataStruct[]
+    ]
+  ): string;
+  encodeFunctionData(
     functionFragment: "UserParticipate",
     values: [
       PromiseOrValue<string>,
@@ -184,6 +211,10 @@ export interface LeagueX3Interface extends utils.Interface {
   decodeFunctionResult(functionFragment: "GetLeagues", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "GetUserLeagueParticipation",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "SetFinalLeaderboard",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -224,8 +255,7 @@ export interface LeagueX3 extends BaseContract {
     CalculateLeaderboard(
       leagueName: PromiseOrValue<string>,
       matchName: PromiseOrValue<string>,
-      user_address: PromiseOrValue<string>,
-      finalPoints: PromiseOrValue<BigNumberish>,
+      userLeaderboardData: LeagueX3.LeaderboardDataStruct[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -276,6 +306,13 @@ export interface LeagueX3 extends BaseContract {
       }
     >;
 
+    SetFinalLeaderboard(
+      leagueName: PromiseOrValue<string>,
+      matchName: PromiseOrValue<string>,
+      userLeaderboardData: LeagueX3.LeaderboardDataStruct[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     UserParticipate(
       user_addr: PromiseOrValue<string>,
       leagueName: PromiseOrValue<string>,
@@ -288,8 +325,7 @@ export interface LeagueX3 extends BaseContract {
   CalculateLeaderboard(
     leagueName: PromiseOrValue<string>,
     matchName: PromiseOrValue<string>,
-    user_address: PromiseOrValue<string>,
-    finalPoints: PromiseOrValue<BigNumberish>,
+    userLeaderboardData: LeagueX3.LeaderboardDataStruct[],
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -340,6 +376,13 @@ export interface LeagueX3 extends BaseContract {
     }
   >;
 
+  SetFinalLeaderboard(
+    leagueName: PromiseOrValue<string>,
+    matchName: PromiseOrValue<string>,
+    userLeaderboardData: LeagueX3.LeaderboardDataStruct[],
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   UserParticipate(
     user_addr: PromiseOrValue<string>,
     leagueName: PromiseOrValue<string>,
@@ -352,8 +395,7 @@ export interface LeagueX3 extends BaseContract {
     CalculateLeaderboard(
       leagueName: PromiseOrValue<string>,
       matchName: PromiseOrValue<string>,
-      user_address: PromiseOrValue<string>,
-      finalPoints: PromiseOrValue<BigNumberish>,
+      userLeaderboardData: LeagueX3.LeaderboardDataStruct[],
       overrides?: CallOverrides
     ): Promise<LeagueX3.LeaderboardDataStructOutput[]>;
 
@@ -404,6 +446,13 @@ export interface LeagueX3 extends BaseContract {
       }
     >;
 
+    SetFinalLeaderboard(
+      leagueName: PromiseOrValue<string>,
+      matchName: PromiseOrValue<string>,
+      userLeaderboardData: LeagueX3.LeaderboardDataStruct[],
+      overrides?: CallOverrides
+    ): Promise<LeagueX3.LeaderboardDataStructOutput[]>;
+
     UserParticipate(
       user_addr: PromiseOrValue<string>,
       leagueName: PromiseOrValue<string>,
@@ -419,8 +468,7 @@ export interface LeagueX3 extends BaseContract {
     CalculateLeaderboard(
       leagueName: PromiseOrValue<string>,
       matchName: PromiseOrValue<string>,
-      user_address: PromiseOrValue<string>,
-      finalPoints: PromiseOrValue<BigNumberish>,
+      userLeaderboardData: LeagueX3.LeaderboardDataStruct[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -464,6 +512,13 @@ export interface LeagueX3 extends BaseContract {
       user_addr: PromiseOrValue<string>,
       leagueName: PromiseOrValue<string>,
       overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    SetFinalLeaderboard(
+      leagueName: PromiseOrValue<string>,
+      matchName: PromiseOrValue<string>,
+      userLeaderboardData: LeagueX3.LeaderboardDataStruct[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     UserParticipate(
@@ -479,8 +534,7 @@ export interface LeagueX3 extends BaseContract {
     CalculateLeaderboard(
       leagueName: PromiseOrValue<string>,
       matchName: PromiseOrValue<string>,
-      user_address: PromiseOrValue<string>,
-      finalPoints: PromiseOrValue<BigNumberish>,
+      userLeaderboardData: LeagueX3.LeaderboardDataStruct[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -524,6 +578,13 @@ export interface LeagueX3 extends BaseContract {
       user_addr: PromiseOrValue<string>,
       leagueName: PromiseOrValue<string>,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    SetFinalLeaderboard(
+      leagueName: PromiseOrValue<string>,
+      matchName: PromiseOrValue<string>,
+      userLeaderboardData: LeagueX3.LeaderboardDataStruct[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     UserParticipate(

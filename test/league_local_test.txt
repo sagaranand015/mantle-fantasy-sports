@@ -1,10 +1,10 @@
 
-LeagueX3 SC deployed to 0xA732aA3549505972Fb6581D6cAcdcb311d1Ed9Ca
+LeagueX3 SC deployed to 0x7b3956199623eC181755e1926280FF8CE714C71D
 
 
 ==== leagueX3 SC testing
 const l = await ethers.getContractFactory("LeagueX3");
-const leagueX3 = await l.attach("0xA732aA3549505972Fb6581D6cAcdcb311d1Ed9Ca");
+const leagueX3 = await l.attach("0x7b3956199623eC181755e1926280FF8CE714C71D");
 
 await leagueX3.CreateUpdateLeague("India vs Australia WT20 WC 1st ODI", "Welcome League for Beginners", "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", "ipfs://bafkreidud6zwwtqpmah76oig2lnpguy6grlrwxmnw763xl7vsvfvuwgtcq",  "INDIA", "AUSTRALIA", false, false, 20, 1);
 
@@ -16,14 +16,16 @@ await leagueX3.GetLeagues("India vs Australia WT20 WC 1st ODI");
 
 await leagueX3.GetAllUserParticipation("0xf4267F20B463421D2cF3db534491b7920F79Ac4F");
 
-await leagueX3.UserParticipate("0xf4267F20B463421D2cF3db534491b7920F79Ac4F", "leagueIpfsLink01", "c4F-Squad01", { value: ethers.utils.parseEther("1") });
-await leagueX3.UserParticipate("0xf4267F20B463421D2cF3db534491b7920F79Ac4F", "leagueIpfsLink01", "c4F-Squad02");
-await leagueX3.UserParticipate("0xf4267F20B463421D2cF3db534491b7920F79Ac4F", "leagueIpfsLink02", "c4F-Squad03");
+await leagueX3.UserParticipate("0xf4267F20B463421D2cF3db534491b7920F79Ac4F", "Welcome League for Beginners", "India vs Australia WT20 WC 1st ODI", "ipfs://bafkreibligv4g6jbhrpymailuu5h2bn7nef4xngea34fwflvtxxe5rq3km", { value: ethers.utils.parseEther("1") });
 
-await leagueX3.CalculateLeaderboard("Welcome League for Beginners", "0xf4267F20B463421D2cF3db534491b7920F79Ac4F", 257);
-await leagueX3.CalculateLeaderboard("Welcome League for Beginners", "0xDeC6Df558e198A7745AcBe881f61B3506D59CFC4", 198);
+await leagueX3.UserParticipate("0xDeC6Df558e198A7745AcBe881f61B3506D59CFC4", "Welcome League for Beginners", "India vs Australia WT20 WC 1st ODI", "ipfs://bafkreibligv4g6jbhrpymailuu5h2bn7nef4xngea34fwflvtxxe5rq3km", { value: ethers.utils.parseEther("1") });
 
-await leagueX3.GetLeagueLeaderboard("Millionaire Elastic League",  "India vs Australia WT20 WC 1st ODI");
+await leagueX3.CalculateLeaderboard("Welcome League for Beginners", "India vs Australia WT20 WC 1st ODI", [{userAddress: "0xf4267F20B463421D2cF3db534491b7920F79Ac4F", totalPoints: 300, position: 0, isWinner: false, isRunnersUp: false, isSecondRunnersUp: false, isConsolationPrice: false}, {userAddress: "0xDeC6Df558e198A7745AcBe881f61B3506D59CFC4", totalPoints: 190, position: 0, isWinner: false, isRunnersUp: false, isSecondRunnersUp: false, isConsolationPrice: false}]);
+
+
+await leagueX3.GetLeagueLeaderboard("Welcome League for Beginners",  "India vs Australia WT20 WC 1st ODI");
+
+await leagueX3.SetFinalLeaderboard("Welcome League for Beginners", "India vs Australia WT20 WC 1st ODI", [{userAddress: "0xf4267F20B463421D2cF3db534491b7920F79Ac4F", totalPoints: 300, position: 1, isWinner: true, isRunnersUp: false, isSecondRunnersUp: false, isConsolationPrice: false}, {userAddress: "0xDeC6Df558e198A7745AcBe881f61B3506D59CFC4", totalPoints: 190, position: 2, isWinner: false, isRunnersUp: true, isSecondRunnersUp: false, isConsolationPrice: false}]);
 
 await leagueX3.get_user_league_participation("0xf4267F20B463421D2cF3db534491b7920F79Ac4F", "leagueIpfsLink01");
 await leagueX3.get_user_league_participation("0xf4267F20B463421D2cF3db534491b7920F79Ac4F", "leagueIpfsLink02");

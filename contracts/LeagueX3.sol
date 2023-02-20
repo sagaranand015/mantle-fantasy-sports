@@ -23,6 +23,11 @@ contract LeagueX3 {
     struct leaderboardData {
         address userAddress;
         uint32 totalPoints;
+        uint32 position;
+        bool isWinner;
+        bool isRunnersUp;
+        bool isSecondRunnersUp;
+        bool isConsolationWinner;
     }
 
     // this mapping is between the matchipfsLink obtained from datastore =>
@@ -46,31 +51,113 @@ contract LeagueX3 {
     address eAddr = 0xDeC6Df558e198A7745AcBe881f61B3506D59CFC4;
     address payable escrowAddr = payable(eAddr);
 
-    function CalculateLeaderboard(
+    function SetFinalLeaderboard(
         string memory leagueName,
         string memory matchName,
-        address user_address,
-        uint32 finalPoints
+        leaderboardData[] memory userLeaderboardData
     ) public returns (leaderboardData[] memory) {
         string memory finalNameSep = string.concat(leagueName, ";;;");
         string memory finalName = string.concat(finalNameSep, matchName);
         leaderboardData[] storage allLeaderboards = leagueLeaderboard[
             finalName
         ];
-        for (uint256 i = 0; i < allLeaderboards.length; i++) {
-            if (allLeaderboards[i].userAddress == user_address) {
-                allLeaderboards[i].totalPoints = finalPoints;
-                return allLeaderboards;
+        for (uint8 j = 0; j < userLeaderboardData.length; j++) {
+            for (uint256 i = 0; i < allLeaderboards.length; i++) {
+                if (
+                    allLeaderboards[i].userAddress ==
+                    userLeaderboardData[j].userAddress
+                ) {
+                    allLeaderboards[i].position = userLeaderboardData[j]
+                        .position;
+                    allLeaderboards[i].isWinner = userLeaderboardData[j]
+                        .isWinner;
+                    allLeaderboards[i].isRunnersUp = userLeaderboardData[j]
+                        .isRunnersUp;
+                    allLeaderboards[i].isSecondRunnersUp = userLeaderboardData[
+                        j
+                    ].isSecondRunnersUp;
+                    allLeaderboards[i]
+                        .isConsolationWinner = userLeaderboardData[j]
+                        .isConsolationWinner;
+                }
             }
         }
-        leaderboardData memory lbData = leaderboardData(
-            user_address,
-            finalPoints
-        );
-        allLeaderboards.push(lbData);
-        leagueLeaderboard[finalName] = allLeaderboards;
         return allLeaderboards;
     }
+
+    function CalculateLeaderboard(
+        string memory leagueName,
+        string memory matchName,
+        leaderboardData[] memory userLeaderboardData
+    ) public returns (leaderboardData[] memory) {
+        string memory finalNameSep = string.concat(leagueName, ";;;");
+        string memory finalName = string.concat(finalNameSep, matchName);
+        leaderboardData[] storage allLeaderboards = leagueLeaderboard[
+            finalName
+        ];
+        for (uint8 j = 0; j < userLeaderboardData.length; j++) {
+            bool exists = false;
+            for (uint256 i = 0; i < allLeaderboards.length; i++) {
+                if (
+                    allLeaderboards[i].userAddress ==
+                    userLeaderboardData[j].userAddress
+                ) {
+                    allLeaderboards[i].totalPoints = userLeaderboardData[j]
+                        .totalPoints;
+                    allLeaderboards[i].position = 0;
+                    allLeaderboards[i].isWinner = false;
+                    allLeaderboards[i].isRunnersUp = false;
+                    allLeaderboards[i].isSecondRunnersUp = false;
+                    allLeaderboards[i].isConsolationWinner = false;
+                    exists = true;
+                    break;
+                }
+            }
+            if (exists) {
+                continue;
+            }
+            leaderboardData memory lbData = leaderboardData(
+                userLeaderboardData[j].userAddress,
+                userLeaderboardData[j].totalPoints,
+                0,
+                false,
+                false,
+                false,
+                false
+            );
+            allLeaderboards.push(lbData);
+            leagueLeaderboard[finalName] = allLeaderboards;
+        }
+        return allLeaderboards;
+    }
+
+    // function CalculateLeaderboard(
+    //     string memory leagueName,
+    //     string memory matchName,
+    //     address[] memory user_address,
+    //     uint32 finalPoints
+    // ) public returns (leaderboardData[] memory) {
+    //     string memory finalNameSep = string.concat(leagueName, ";;;");
+    //     string memory finalName = string.concat(finalNameSep, matchName);
+    //     leaderboardData[] storage allLeaderboards = leagueLeaderboard[
+    //         finalName
+    //     ];
+    //     for (uint8 j = 0; j < user_address.length; j++) {
+    //         for (uint256 i = 0; i < allLeaderboards.length; i++) {
+    //             if (allLeaderboards[i].userAddress == user_address[j]) {
+    //                 allLeaderboards[i].totalPoints = finalPoints;
+    //                 continue;
+    //             }
+    //         }
+    //         leaderboardData memory lbData = leaderboardData(
+    //             user_address[j],
+    //             finalPoints
+    //         );
+    //         allLeaderboards.push(lbData);
+    //         leagueLeaderboard[finalName] = allLeaderboards;
+    //     }
+    //     return allLeaderboards;
+    // }
 
     function GetLeagueLeaderboard(
         string memory leagueName,
@@ -170,7 +257,15 @@ contract LeagueX3 {
         allLeagueUsers.push(user_addr);
 
         // push to leagueLeaderboard mapping
-        leaderboardData memory uleaderData = leaderboardData(user_addr, 0);
+        leaderboardData memory uleaderData = leaderboardData(
+            user_addr,
+            0,
+            0,
+            false,
+            false,
+            false,
+            false
+        );
         leaderboardData[] storage leaderBoardData = leagueLeaderboard[
             finalName
         ];

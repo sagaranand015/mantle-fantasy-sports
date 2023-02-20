@@ -29,18 +29,31 @@ import 'react-datepicker/dist/react-datepicker.css'
 
 import { FetchDataFromIpfsLink, GetLeagueDataIpfsLink, GetSquadDataIpfsLink } from 'src/@core/utils/nftStorage'
 import { ALL_LEAGUES } from 'src/@core/utils/constants'
-import { Avatar, AvatarGroup, Button, CardActions, CardContent, CardMedia, Collapse, Divider, FormControl, FormHelperText, IconButton, InputLabel, Menu, MenuItem, Modal, SelectChangeEvent, TableBody, TableCell, TableContainer, TableHead, Typography } from '@mui/material';
+import { Alert, Avatar, AvatarGroup, Button, CardActions, CardContent, CardMedia, Collapse, Divider, FormControl, FormHelperText, IconButton, InputLabel, Menu, MenuItem, Modal, SelectChangeEvent, TableBody, TableCell, TableContainer, TableHead, Typography } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableRow from '@mui/material/TableRow';
 import LeagueAbi from '../../../abis/LeagueX3.json';
 import { DEMO_SQUAD01, DEMO_SQUAD02, LEAGUE_CONTRACT } from 'src/utils/constants';
 import { useRouter } from 'next/router';
 import { GridProps } from '@mui/system';
-import { CartPlus, Facebook, GooglePlus, Linkedin, ShareVariant, Twitter } from 'mdi-material-ui';
+import { BookLock, CartPlus, Facebook, GooglePlus, Linkedin, ShareVariant, Twitter } from 'mdi-material-ui';
 import { useAuth } from 'src/configs/authProvider';
 import { LoadingButton } from '@mui/lab';
 import { SlowBuffer } from 'buffer';
 import { GetLeagueMatchFromLeagueName, GetRandomPointsForUser } from 'src/utils/utils';
+
+interface ILeagueData {
+  name: string;
+  img: string;
+  metadata: string;
+  matchName: string;
+  teamA: string;
+  teamB: string;
+  isRunning: string;
+  isFinished: boolean;
+  leaguePrice: number;
+  squadLimit: number;
+};
 
 interface Column {
   id: 'userAddress' | 'totalPoints' | 'position'
@@ -94,12 +107,21 @@ interface IUserLeagueData {
 interface ILeaderboardData {
   userAddress: string;
   totalPoints: number;
+  position: number;
+  isWinner: boolean;
+  isRunnersUp: boolean;
+  isSecondRunnersUp: boolean;
+  isConsolationWinner: boolean;
 }
 
 interface ISortedLeaderboardData {
   userAddress: string;
   totalPoints: number;
   position: number;
+  isWinner: boolean;
+  isRunnersUp: boolean;
+  isSecondRunnersUp: boolean;
+  isConsolationWinner: boolean;
 }
 
 const UserLeagues = (props: any) => {
@@ -113,12 +135,15 @@ const UserLeagues = (props: any) => {
     setAnchorEl(null)
   }
 
-  const [userLeagues, setUserLeagues] = useState<IUserLeagueData[]>([]);
+  const [matchLeagues, setMatchLeagues] = useState<ILeagueData[]>([]);
   const [leagueLeaderboard, setLeagueLeaderboard] = useState<ILeaderboardData[]>([]);
   const [sortedLeaderboard, setSortedLeaderboard] = useState<ISortedLeaderboardData[]>([]);
   const { currentAccount, setCurrentAccount } = useAuth();
   const [isCalculating, setIsCalculating] = useState(false);
-  const [selectedLeague, setSelectedLeague] = useState<IUserLeagueData>();
+  const [isSimulating, setIsSimulating] = useState(false);
+  const [isSimulationDone, setIsSimulationDone] = useState(false);
+  const [selectedLeague, setSelectedLeague] = useState<ILeagueData>();
+  const [showSortedLeaderboard, setShowSortedLeaderboard] = useState(false);
 
   const [modalOpen, setModalOpen] = useState(false);
   const handleModalOpen = () => setModalOpen(true);
@@ -133,11 +158,12 @@ const UserLeagues = (props: any) => {
   const lContract = new ethers.Contract(LEAGUE_CONTRACT, LeagueAbi.abi, signer);
 
   const router = useRouter();
+  const matchName = router.query.matchName as string
 
-  async function getUserLeagues() {
-    const resp = await lContract.GetAllUserParticipation(currentAccount);
-    console.log("====== getUserLeagues contract resp: ", resp);
-    return resp[1];
+  async function getAllMatchLeagues() {
+    const resp = await lContract.GetLeagues(matchName);
+    console.log("====== getMatchLeagues contract resp: ", resp);
+    return resp;
   }
 
   async function getLeagueLeaderboard(leagueName: string, matchName: string) {
@@ -146,65 +172,176 @@ const UserLeagues = (props: any) => {
     return resp;
   }
 
-  function createSortedData(userAddress: string, totalPoints: number, position: number): ISortedLeaderboardData {
-    return { userAddress, totalPoints, position };
+  function createSortedData(obj: ILeaderboardData): ISortedLeaderboardData {
+    return {
+      userAddress: obj.userAddress,
+      totalPoints: obj.totalPoints,
+      position: obj.position,
+      isWinner: obj.isWinner,
+      isRunnersUp: obj.isRunnersUp,
+      isSecondRunnersUp: obj.isSecondRunnersUp,
+      isConsolationWinner: obj.isConsolationWinner,
+    };
   }
 
-  async function ShowLeaderboardModal(league: IUserLeagueData) {
-    const leagueMatch = GetLeagueMatchFromLeagueName(league.leagueName);
-    const resp = await getLeagueLeaderboard(leagueMatch.league, leagueMatch.match);
-    console.log("======= GetLeagueLeaderBoard are: ", resp);
-    if (resp) {
-      var toBeSorted: ILeaderboardData[] = [];
-      for (var i = 0; i < resp.length; i++) {
-        toBeSorted.push(resp[i]);
-      }
-      toBeSorted.sort(function (a: ILeaderboardData, b: ILeaderboardData) {
-        return b.totalPoints - a.totalPoints;
-      });
-      // array is sorted now
-      var localSorted: ISortedLeaderboardData[] = []
-      for (var i = 0; i < toBeSorted.length; i++) {
-        localSorted.push(createSortedData(toBeSorted[i].userAddress, toBeSorted[i].totalPoints, i + 1));
-      }
-      setSortedLeaderboard(localSorted);
-      setModalOpen(true);
-      setLeagueLeaderboard(toBeSorted);
-      setSelectedLeague(league);
-      console.log("======= leagueLeaderboard are: ", sortedLeaderboard);
-    }
+  async function ShowLeaderboardModal(league: ILeagueData) {
+    setShowSortedLeaderboard(false);
+    setModalOpen(true);
+    setSelectedLeague(league);
+    // const leagueMatch = GetLeagueMatchFromLeagueName(league.leagueName);
+    // const resp = await getLeagueLeaderboard(leagueMatch.league, leagueMatch.match);
+    // console.log("======= GetLeagueLeaderBoard are: ", resp);
+    // if (resp) {
+    //   var toBeSorted: ILeaderboardData[] = [];
+    //   for (var i = 0; i < resp.length; i++) {
+    //     toBeSorted.push(resp[i]);
+    //   }
+    //   toBeSorted.sort(function (a: ILeaderboardData, b: ILeaderboardData) {
+    //     return b.totalPoints - a.totalPoints;
+    //   });
+    //   // array is sorted now
+    //   var localSorted: ISortedLeaderboardData[] = []
+    //   for (var i = 0; i < toBeSorted.length; i++) {
+    //     localSorted.push(createSortedData(toBeSorted[i].userAddress, toBeSorted[i].totalPoints, i + 1));
+    //   }
+    //   setSortedLeaderboard(localSorted);
+    //   setModalOpen(true);
+    //   setLeagueLeaderboard(toBeSorted);
+    //   setSelectedLeague(league);
+    //   console.log("======= leagueLeaderboard are: ", sortedLeaderboard);
+    //   // setShowSortedLeaderboard(true);
+    // }
   }
 
-  async function calculateLeagueLeaderboard(leagueName: string, matchName: string, user_addr: string, totalPoints: number) {
-    const resp = await lContract.CalculateLeaderboard(leagueName, matchName, user_addr, totalPoints);
+  async function calculateLeagueLeaderboard(leagueName: string, matchName: string, objs: ILeaderboardData[]) {
+    const resp = await lContract.CalculateLeaderboard(leagueName, matchName, objs);
     console.log("====== calculateLeagueLeaderboard contract resp: ", resp);
     return resp;
   }
 
-  useEffect(() => {
-    (async () => {
-      const uLeagues = await getUserLeagues();
-      setUserLeagues(uLeagues);
-      console.log("======= userLeagues are: ", userLeagues);
-    })();
-  }, []);
+  async function finalizeLeagueLeaderboard(leagueName: string, matchName: string, objs: ILeaderboardData[]) {
+    const resp = await lContract.SetFinalLeaderboard(leagueName, matchName, objs);
+    console.log("====== finalizeLeagueLeaderboard contract resp: ", resp);
+    return resp;
+  }
 
-  async function CalculateAllLeaderboard() {
+  async function SimulateLeagueLeaderboard() {
+    setIsSimulating(true);
     console.log("======== selected league: ", selectedLeague, leagueLeaderboard);
-    setIsCalculating(true);
-    if (selectedLeague && leagueLeaderboard) {
-      const leagueMatch = GetLeagueMatchFromLeagueName(selectedLeague?.leagueName);
+    if (selectedLeague) {
+      // const leagueMatch = GetLeagueMatchFromLeagueName(selectedLeague.name);
+      const resp = await getLeagueLeaderboard(selectedLeague.name, selectedLeague.matchName);
+      console.log("======= GetLeagueLeaderBoard are: ", resp);
+      var all_reqs: ILeaderboardData[] = [];
+      if (resp) {
+        var ll: ILeaderboardData;
+        for (ll of resp) {
+          const p = GetRandomPointsForUser();
+          const sim_obj: ILeaderboardData = {
+            userAddress: ll.userAddress,
+            totalPoints: p,
+            position: ll.position,
+            isWinner: ll.isWinner,
+            isRunnersUp: ll.isRunnersUp,
+            isSecondRunnersUp: ll.isSecondRunnersUp,
+            isConsolationWinner: ll.isConsolationWinner,
+          }
+          all_reqs.push(sim_obj);
+          console.log("===== simulated request: ", sim_obj);
+        }
 
-      for (const ll of leagueLeaderboard) {
-        const p = GetRandomPointsForUser();
-        const r1 = await calculateLeagueLeaderboard(leagueMatch.league, leagueMatch.match, ll.userAddress, p);
-        console.log("===== calculate resp: ", r1);
+        const r1 = await calculateLeagueLeaderboard(selectedLeague.name, selectedLeague.matchName, all_reqs);
+        console.log("======== simlated response is: ", r1);
+        if (r1) {
+          // do the sorting and stuff here!
+          var toBeSorted: ILeaderboardData[] = [];
+          for (var i = 0; i < all_reqs.length; i++) {
+            toBeSorted.push(all_reqs[i]);
+          }
+          toBeSorted.sort(function (a: ILeaderboardData, b: ILeaderboardData) {
+            return b.totalPoints - a.totalPoints;
+          });
+          // array is sorted now
+          var localSorted: ISortedLeaderboardData[] = []
+          console.log("===== final sorted data is: ", localSorted);
+
+          for (var i = 0; i < toBeSorted.length; i++) {
+            toBeSorted[0].isWinner = true;
+            if (i == 1) {
+              toBeSorted[1].isRunnersUp = true;
+            } else if (i == 2) {
+              toBeSorted[1].isSecondRunnersUp = true;
+            } else if (i == 3) {
+              toBeSorted[3].isConsolationWinner = true;
+            }
+            toBeSorted[i].position = i + 1;
+            localSorted.push(toBeSorted[i]);
+          }
+
+          setSortedLeaderboard(localSorted);
+          setShowSortedLeaderboard(true);
+          setLeagueLeaderboard(toBeSorted);
+          console.log("===== final sorted data is: ", localSorted);
+        }
+
       }
-      setModalOpen(false);
-      setIsCalculating(false);
+    }
+    setIsSimulating(false);
+    setIsSimulationDone(true);
+  }
+
+  async function FinalizeLeaderboard() {
+    if (selectedLeague && sortedLeaderboard) {
+      // const leagueMatch = GetLeagueMatchFromLeagueName(selectedLeague.name);
+      const finalizeResp = finalizeLeagueLeaderboard(selectedLeague.name, selectedLeague.matchName, sortedLeaderboard);
+      console.log("===== finalizaing: ", selectedLeague, sortedLeaderboard, finalizeResp);
+    } else {
+      alert("Please reload the page...");
     }
   }
 
+  useEffect(() => {
+    (async () => {
+      const uLeagues = await getAllMatchLeagues();
+      // setUserLeagues(uLeagues);
+      setMatchLeagues(uLeagues);
+      console.log("======= matchLeagues are: ", matchLeagues);
+    })();
+  }, []);
+
+  // setIsCalculating(true);
+  // if (selectedLeague && leagueLeaderboard) {
+  //   const leagueMatch = GetLeagueMatchFromLeagueName(selectedLeague?.leagueName);
+
+  //   for (const ll of leagueLeaderboard) {
+  //     const p = GetRandomPointsForUser();
+  //     const r1 = await calculateLeagueLeaderboard(leagueMatch.league, leagueMatch.match, ll.userAddress, p);
+  //     console.log("===== calculate resp: ", r1);
+  //   }
+  //   setModalOpen(false);
+  //   setIsCalculating(false);
+
+
+
+  // if (resp) {
+  //   var toBeSorted: ILeaderboardData[] = [];
+  //   for (var i = 0; i < resp.length; i++) {
+  //     toBeSorted.push(resp[i]);
+  //   }
+  //   toBeSorted.sort(function (a: ILeaderboardData, b: ILeaderboardData) {
+  //     return b.totalPoints - a.totalPoints;
+  //   });
+  //   // array is sorted now
+  //   var localSorted: ISortedLeaderboardData[] = []
+  //   for (var i = 0; i < toBeSorted.length; i++) {
+  //     localSorted.push(createSortedData(toBeSorted[i].userAddress, toBeSorted[i].totalPoints, i + 1));
+  //   }
+  //   setSortedLeaderboard(localSorted);
+  //   setModalOpen(true);
+  //   setLeagueLeaderboard(toBeSorted);
+  //   setSelectedLeague(league);
+  //   console.log("======= leagueLeaderboard are: ", sortedLeaderboard);
+  //   // setShowSortedLeaderboard(true);
 
   return (
     <div>
@@ -222,50 +359,73 @@ const UserLeagues = (props: any) => {
               </Typography>
             </Grid>
             <Grid item xs={12}>
-              <TableContainer sx={{ maxHeight: 440 }}>
-                <Table stickyHeader aria-label='sticky table'>
-                  <TableHead>
-                    <TableRow>
-                      {columns.map(column => (
-                        <TableCell key={column.id} align={column.align} sx={{ minWidth: column.minWidth }}>
-                          {column.label}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {sortedLeaderboard.map(row => {
-                      return (
-                        <TableRow hover role='checkbox' tabIndex={-1} key={row.userAddress}>
-                          {columns.map(column => {
-                            const value = row[column.id];
-                            return (
-                              <TableCell key={column.id} align={column.align}>
-                                {column.format && typeof value === 'number' ? column.format(value) : value}
+              <Button variant='contained' sx={{ py: 2.5, width: '100%', borderTopLeftRadius: 0, borderTopRightRadius: 0 }} onClick={() => SimulateLeagueLeaderboard()} disabled={isSimulating}>
+                <LoadingButton loading={isSimulating}></LoadingButton>
+                Simulate Player Points
+              </Button>
+              {isSimulationDone ?
+                <Alert sx={{ width: '100%', display: 'flex', justifyContent: 'center', mt: 2 }} severity="info">
+                  Simulation is done. In production environment, this transaction will be performed by an automated workflow on an L2 Chain.
+                </Alert> : ""}
+
+              {showSortedLeaderboard ?
+                <div>
+                  <Grid item xs={12}>
+                    <TableContainer sx={{ maxHeight: 440 }}>
+                      <Table stickyHeader aria-label='sticky table'>
+                        <TableHead>
+                          <TableRow>
+                            {columns.map(column => (
+                              <TableCell key={column.id} align={column.align} sx={{ minWidth: column.minWidth }}>
+                                {column.label}
                               </TableCell>
+                            ))}
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {sortedLeaderboard.map(row => {
+                            return (
+                              <TableRow hover role='checkbox' tabIndex={-1} key={row.userAddress}>
+                                {columns.map(column => {
+                                  const value = row[column.id];
+                                  return (
+                                    <TableCell key={column.id} align={column.align}>
+                                      {column.format && typeof value === 'number' ? column.format(value) : value}
+                                    </TableCell>
+                                  )
+                                })}
+                              </TableRow>
                             )
                           })}
-                        </TableRow>
-                      )
-                    })}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button variant='contained' sx={{ py: 2.5, width: '100%', borderTopLeftRadius: 0, borderTopRightRadius: 0 }} onClick={() => FinalizeLeaderboard()} disabled={isCalculating}>
+                      <LoadingButton loading={isCalculating}></LoadingButton>
+                      Finalize Leaderboard
+                    </Button>
+                  </Grid>
+                </div>
+                :
+                <Grid item xs={12}>
+                  <Alert sx={{ width: '100%', display: 'flex', justifyContent: 'center' }} severity="info">
+                    Please perform a simulation and then finalize the leaderboard!
+                  </Alert>
+                </Grid>
+
+              }
+
             </Grid>
-          </Grid>
-          <Grid item xs={12}>
-            <Button variant='contained' sx={{ py: 2.5, width: '100%', borderTopLeftRadius: 0, borderTopRightRadius: 0 }} onClick={() => CalculateAllLeaderboard()} disabled={isCalculating}>
-              <LoadingButton loading={isCalculating}></LoadingButton>
-              Calculate Leaderboard
-            </Button>
           </Grid>
         </Box>
       </Modal>
       <Grid container>
         {
-          userLeagues.length > 0 ? (
-            userLeagues.map((ul: IUserLeagueData) => {
-              return <Grid key={ul.leagueName} item xs={12} sm={6} md={6} sx={{ pr: 2, pb: 2 }}>
+          matchLeagues.length > 0 ? (
+            matchLeagues.map((ul: ILeagueData) => {
+              return <Grid key={ul.name} item xs={12} sm={6} md={6} sx={{ pr: 2, pb: 2 }}>
                 <Card>
                   <Grid container spacing={6}>
                     <StyledGrid item md={5} xs={12}>
@@ -285,7 +445,7 @@ const UserLeagues = (props: any) => {
                     >
                       <CardContent>
                         <Typography variant='h6' sx={{ marginBottom: 2 }}>
-                          {ul.leagueName}
+                          {ul.name}, {ul.matchName}
                         </Typography>
                       </CardContent>
                       <CardActions className='card-action-dense'>
