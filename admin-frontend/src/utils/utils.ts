@@ -1,8 +1,16 @@
+import { BigNumber } from "ethers";
+
 export function GetEpochDateTimestampForToday() {
     const d = new Date();
     const epTs = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
     // console.log("======= epoch timestamp is: ", epTs / 1000, d);
     return (epTs / 1000).toString();
+}
+
+export function GetEpochSecsForToday() {
+    const d = new Date();
+    const epTs = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+    return epTs / 1000;
 }
 
 export function GetEpochTimestampToday() {
@@ -29,6 +37,14 @@ export function GetRandomInt() {
     return n;
 }
 
+export function GetRandomPointsForUser() {
+    const n = Math.floor(Math.random() * 300);
+    if (n <= 50) {
+        return 50;
+    }
+    return n;
+}
+
 interface ILeagueMatch {
     league: string;
     match: string;
@@ -44,4 +60,10 @@ export function GetLeagueMatchFromLeagueName(leagueName: string): ILeagueMatch {
     }
     return { league: "", match: "" };
 
+}
+
+export function GetDateFromEpochTs(epochTs: BigNumber) {
+    var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
+    d.setUTCSeconds(epochTs.toNumber());
+    return d.toDateString();
 }

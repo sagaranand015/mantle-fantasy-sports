@@ -40,10 +40,11 @@ import { CartPlus, Facebook, GooglePlus, Linkedin, ShareVariant, Twitter } from 
 import { useAuth } from 'src/configs/authProvider';
 import { LoadingButton } from '@mui/lab';
 import { SlowBuffer } from 'buffer';
-import { GetLeagueMatchFromLeagueName } from 'src/utils/utils';
+import { GetLeagueMatchFromLeagueName, GetSquadCount } from 'src/utils/utils';
+import { auto } from '@popperjs/core';
 
 interface Column {
-  id: 'userAddress' | 'totalPoints' | 'position'
+  id: 'userAddress' | 'totalPoints' | 'position' | 'squads'
   label: string
   minWidth?: number
   align?: 'right'
@@ -56,6 +57,13 @@ const columns: readonly Column[] = [
   {
     id: 'position',
     label: 'position',
+    minWidth: 170,
+    align: 'right',
+    format: (value: number) => value.toLocaleString('en-US')
+  },
+  {
+    id: 'squads',
+    label: 'Squad Count',
     minWidth: 170,
     align: 'right',
     format: (value: number) => value.toLocaleString('en-US')
@@ -79,11 +87,12 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: '60%',
+  width: '80%',
   bgcolor: 'background.paper',
   border: '2px solid #000',
   boxShadow: 24,
   p: 4,
+  overflow: 'scroll',
 };
 
 interface IUserLeagueData {
@@ -100,6 +109,7 @@ interface ISortedLeaderboardData {
   userAddress: string;
   totalPoints: number;
   position: number;
+  squads: number;
 }
 
 const UserLeagues = (props: any) => {
@@ -147,8 +157,9 @@ const UserLeagues = (props: any) => {
     return resp;
   }
 
-  function createSortedData(userAddress: string, totalPoints: number, position: number): ISortedLeaderboardData {
-    return { userAddress, totalPoints, position };
+  function createSortedData(userAddress: string, totalPoints: number, position: number, squadList: string): ISortedLeaderboardData {
+    const squads = GetSquadCount(squadList);
+    return { userAddress, totalPoints, position, squads };
   }
 
   async function ShowLeaderboardModal(league: IUserLeagueData) {
@@ -167,7 +178,7 @@ const UserLeagues = (props: any) => {
       // array is sorted now
       var localSorted: ISortedLeaderboardData[] = []
       for (var i = 0; i < toBeSorted.length; i++) {
-        localSorted.push(createSortedData(toBeSorted[i].userAddress, toBeSorted[i].totalPoints, i + 1));
+        localSorted.push(createSortedData(toBeSorted[i].userAddress, toBeSorted[i].totalPoints, i + 1, league.squads));
       }
       setSortedLeaderboard(localSorted);
       setModalOpen(true);
@@ -200,7 +211,7 @@ const UserLeagues = (props: any) => {
               </Typography>
             </Grid>
             <Grid item xs={12}>
-              <TableContainer sx={{ maxHeight: 440 }}>
+              <TableContainer sx={{ maxHeight: auto }}>
                 <Table stickyHeader aria-label='sticky table'>
                   <TableHead>
                     <TableRow>

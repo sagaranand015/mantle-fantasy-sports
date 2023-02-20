@@ -31,17 +31,12 @@ const navigation = (): VerticalNavItemsType => {
       path: '/my-leagues'
     },
     {
-      title: 'All Leagues',
-      icon: CreditCardOutline,
-      path: '/all-leagues'
+      sectionTitle: 'Rewards'
     },
     {
-      sectionTitle: 'Squads'
-    },
-    {
-      title: 'View My Squads',
+      title: 'My Rewards',
       icon: MdiListBox,
-      path: '/my-squads'
+      path: '/my-rewards'
     },
     // {
     //   sectionTitle: 'Settings'

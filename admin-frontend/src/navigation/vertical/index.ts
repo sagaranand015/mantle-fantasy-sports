@@ -18,30 +18,35 @@ import { VerticalNavItemsType } from 'src/@core/layouts/types'
 const navigation = (): VerticalNavItemsType => {
   return [
     {
-      title: 'Dashboard',
+      sectionTitle: 'Dashboard'
+    },
+    {
+      title: 'Current Matches',
       icon: HomeOutline,
       path: '/'
     },
     {
-      sectionTitle: 'Leagues'
+      title: 'Previous Matches',
+      icon: HomeOutline,
+      path: '/prev-matches'
     },
     {
-      title: 'My Leagues',
-      icon: SendOutline,
-      path: '/my-leagues'
+      title: 'Upcoming Matches',
+      icon: HomeOutline,
+      path: '/upcoming-matches'
     },
     {
-      title: 'All Leagues',
-      icon: CreditCardOutline,
-      path: '/all-leagues'
+      sectionTitle: 'Users'
     },
     {
-      sectionTitle: 'Squads'
-    },
-    {
-      title: 'View My Squads',
+      title: 'All Users',
       icon: MdiListBox,
-      path: '/my-squads'
+      path: '/my-users'
+    },
+    {
+      title: 'User Rewards',
+      icon: MdiListBox,
+      path: '/my-users'
     },
     // {
     //   sectionTitle: 'Settings'

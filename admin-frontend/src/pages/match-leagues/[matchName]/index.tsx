@@ -8,7 +8,7 @@ import Card from '@mui/material/Card'
 import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
 import TabContext from '@mui/lab/TabContext'
-import { styled } from '@mui/material/styles'
+import { responsiveFontSizes, styled } from '@mui/material/styles'
 import MuiTab, { TabProps } from '@mui/material/Tab'
 import Grid from '@mui/material/Grid'
 
@@ -29,8 +29,9 @@ import 'react-datepicker/dist/react-datepicker.css'
 
 import { FetchDataFromIpfsLink, GetLeagueDataIpfsLink, GetSquadDataIpfsLink } from 'src/@core/utils/nftStorage'
 import { ALL_LEAGUES } from 'src/@core/utils/constants'
-import { Avatar, AvatarGroup, Button, CardActions, CardContent, CardMedia, Collapse, Divider, FormControl, FormHelperText, IconButton, InputLabel, Menu, MenuItem, Modal, SelectChangeEvent, Typography } from '@mui/material';
-import Select from '@mui/material/Select';
+import { Avatar, AvatarGroup, Button, CardActions, CardContent, CardMedia, Collapse, Divider, FormControl, FormHelperText, IconButton, InputLabel, Menu, MenuItem, Modal, SelectChangeEvent, TableBody, TableCell, TableContainer, TableHead, Typography } from '@mui/material';
+import Table from '@mui/material/Table';
+import TableRow from '@mui/material/TableRow';
 import LeagueAbi from '../../../abis/LeagueX3.json';
 import { DEMO_SQUAD01, DEMO_SQUAD02, LEAGUE_CONTRACT } from 'src/utils/constants';
 import { useRouter } from 'next/router';
@@ -38,6 +39,28 @@ import { GridProps } from '@mui/system';
 import { CartPlus, Facebook, GooglePlus, Linkedin, ShareVariant, Twitter } from 'mdi-material-ui';
 import { useAuth } from 'src/configs/authProvider';
 import { LoadingButton } from '@mui/lab';
+import { SlowBuffer } from 'buffer';
+import { GetLeagueMatchFromLeagueName, GetRandomPointsForUser } from 'src/utils/utils';
+
+interface Column {
+  id: 'userAddress' | 'totalPoints' | 'position'
+  label: string
+  minWidth?: number
+  align?: 'right'
+  format?: (value: number) => string
+}
+
+const columns: readonly Column[] = [
+  { id: 'userAddress', label: 'Address', minWidth: 170 },
+  { id: 'totalPoints', label: 'totalPoints', minWidth: 100 },
+  {
+    id: 'position',
+    label: 'position',
+    minWidth: 170,
+    align: 'right',
+    format: (value: number) => value.toLocaleString('en-US')
+  }
+]
 
 const StyledGrid = styled(Grid)<GridProps>(({ theme }) => ({
   display: 'flex',
@@ -63,25 +86,23 @@ const style = {
   p: 4,
 };
 
-interface ILeagueData {
-  name: string;
-  img: string;
-  metadata: string;
-  matchName: string;
-  teamA: string;
-  teamB: string;
-  isRunning: string;
-  isFinished: boolean;
-  leaguePrice: number;
-  squadLimit: number;
+interface IUserLeagueData {
+  leagueName: string;
+  squads: string;
 };
 
-interface ISquadData {
-  squad: any;
-  squadLink: string;
+interface ILeaderboardData {
+  userAddress: string;
+  totalPoints: number;
 }
 
-const AllMatcheLeagues = (props: any) => {
+interface ISortedLeaderboardData {
+  userAddress: string;
+  totalPoints: number;
+  position: number;
+}
+
+const UserLeagues = (props: any) => {
   // ** State for local share components
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
@@ -92,21 +113,19 @@ const AllMatcheLeagues = (props: any) => {
     setAnchorEl(null)
   }
 
-  const [matchLeagues, setMatchLeagues] = useState<ILeagueData[]>([]);
+  const [userLeagues, setUserLeagues] = useState<IUserLeagueData[]>([]);
+  const [leagueLeaderboard, setLeagueLeaderboard] = useState<ILeaderboardData[]>([]);
+  const [sortedLeaderboard, setSortedLeaderboard] = useState<ISortedLeaderboardData[]>([]);
   const { currentAccount, setCurrentAccount } = useAuth();
-  const [pageDataLoaded, setPageDataLoaded] = useState(false);
-
-  const [squadData, setSquadData] = useState<ISquadData[]>([]);
-  const [selectedLeague, setSelectedLeague] = useState<ILeagueData>()
-  const [selectedSquad, setSelectedSquad] = useState<string>()
-  const [isLoading, settIsLoading] = useState<boolean>(false)
+  const [isCalculating, setIsCalculating] = useState(false);
+  const [selectedLeague, setSelectedLeague] = useState<IUserLeagueData>();
 
   const [modalOpen, setModalOpen] = useState(false);
   const handleModalOpen = () => setModalOpen(true);
   const handleModalClose = () => setModalOpen(false);
 
   const handleModalChange = (event: SelectChangeEvent) => {
-    setSelectedSquad(event.target.value);
+    console.log("nothing for now");
   };
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -114,75 +133,78 @@ const AllMatcheLeagues = (props: any) => {
   const lContract = new ethers.Contract(LEAGUE_CONTRACT, LeagueAbi.abi, signer);
 
   const router = useRouter();
-  const matchName = router.query.matchName as string
 
-  async function getMatchLeagues(matchName: string) {
-    const resp = await lContract.GetLeagues(matchName);
-    console.log("====== getMatchLeagues contract resp: ", resp);
+  async function getUserLeagues() {
+    const resp = await lContract.GetAllUserParticipation(currentAccount);
+    console.log("====== getUserLeagues contract resp: ", resp);
+    return resp[1];
+  }
+
+  async function getLeagueLeaderboard(leagueName: string, matchName: string) {
+    const resp = await lContract.GetLeagueLeaderboard(leagueName, matchName);
+    console.log("====== getLeagueLeaderboard contract resp: ", resp);
     return resp;
   }
 
-  async function participateWithContractCall(leagueName: string, squadLink: string) {
-    if (matchName) {
-      const resp = await lContract.UserParticipate(currentAccount, leagueName, matchName, squadLink, { value: ethers.utils.parseEther("20") });
-      console.log("====== participateWithContractCall contract resp: ", resp);
-      return resp;
-    }
-    alert("something went wrong! Please reload the page. ");
-    console.error("something went wrong! Please reload the page. ");
-    return;
+  function createSortedData(userAddress: string, totalPoints: number, position: number): ISortedLeaderboardData {
+    return { userAddress, totalPoints, position };
   }
 
-  async function GetAllUserDemoSquads() {
-    const demo_squad01 = await FetchDataFromIpfsLink(DEMO_SQUAD01);
-    const demo_squad01_data: ISquadData = {
-      squad: demo_squad01,
-      squadLink: DEMO_SQUAD01,
+  async function ShowLeaderboardModal(league: IUserLeagueData) {
+    const leagueMatch = GetLeagueMatchFromLeagueName(league.leagueName);
+    const resp = await getLeagueLeaderboard(leagueMatch.league, leagueMatch.match);
+    console.log("======= GetLeagueLeaderBoard are: ", resp);
+    if (resp) {
+      var toBeSorted: ILeaderboardData[] = [];
+      for (var i = 0; i < resp.length; i++) {
+        toBeSorted.push(resp[i]);
+      }
+      toBeSorted.sort(function (a: ILeaderboardData, b: ILeaderboardData) {
+        return b.totalPoints - a.totalPoints;
+      });
+      // array is sorted now
+      var localSorted: ISortedLeaderboardData[] = []
+      for (var i = 0; i < toBeSorted.length; i++) {
+        localSorted.push(createSortedData(toBeSorted[i].userAddress, toBeSorted[i].totalPoints, i + 1));
+      }
+      setSortedLeaderboard(localSorted);
+      setModalOpen(true);
+      setLeagueLeaderboard(toBeSorted);
+      setSelectedLeague(league);
+      console.log("======= leagueLeaderboard are: ", sortedLeaderboard);
     }
-    const demo_squad02 = await FetchDataFromIpfsLink(DEMO_SQUAD02);
-    const demo_squad02_data: ISquadData = {
-      squad: demo_squad02,
-      squadLink: DEMO_SQUAD02,
-    }
+  }
 
-    const all_squads = [demo_squad01_data, demo_squad02_data];
-    setSquadData(all_squads);
+  async function calculateLeagueLeaderboard(leagueName: string, matchName: string, user_addr: string, totalPoints: number) {
+    const resp = await lContract.CalculateLeaderboard(leagueName, matchName, user_addr, totalPoints);
+    console.log("====== calculateLeagueLeaderboard contract resp: ", resp);
+    return resp;
   }
 
   useEffect(() => {
     (async () => {
-      if (matchName) {
-        const mLeagues = await getMatchLeagues(matchName);
-        setMatchLeagues(mLeagues);
-        console.log("======= matchLeagues are: ", matchLeagues);
-      }
-      await GetAllUserDemoSquads();
-      setPageDataLoaded(true);
+      const uLeagues = await getUserLeagues();
+      setUserLeagues(uLeagues);
+      console.log("======= userLeagues are: ", userLeagues);
     })();
   }, []);
 
-  async function ParticipateInLeague(selectedLeague: ILeagueData) {
-    console.log("participatig in league")
-    console.log("----- squad data is:", squadData)
-    setSelectedLeague(selectedLeague)
-    handleModalOpen();
-  }
+  async function CalculateAllLeaderboard() {
+    console.log("======== selected league: ", selectedLeague, leagueLeaderboard);
+    setIsCalculating(true);
+    if (selectedLeague && leagueLeaderboard) {
+      const leagueMatch = GetLeagueMatchFromLeagueName(selectedLeague?.leagueName);
 
-  async function ConfirmParticipation() {
-    settIsLoading(true)
-    console.log("confirming participation...", selectedLeague, selectedSquad)
-
-    if (selectedLeague && selectedSquad) {
-      const participateResp = await participateWithContractCall(selectedLeague.name, selectedSquad);
-      console.log("===== participateResp: ", participateResp);
-      settIsLoading(false);
+      for (const ll of leagueLeaderboard) {
+        const p = GetRandomPointsForUser();
+        const r1 = await calculateLeagueLeaderboard(leagueMatch.league, leagueMatch.match, ll.userAddress, p);
+        console.log("===== calculate resp: ", r1);
+      }
       setModalOpen(false);
-      alert("Participation Successful. Please navigate to My-leagues page to see your participation");
-    } else {
-      alert("Please select league and squad");
+      setIsCalculating(false);
     }
-
   }
+
 
   return (
     <div>
@@ -196,41 +218,54 @@ const AllMatcheLeagues = (props: any) => {
           <Grid container spacing={6}>
             <Grid item xs={12}>
               <Typography id="modal-modal-title" variant="h6" component="h2">
-                Participate in {selectedLeague?.name}
+                League Leaderboard
               </Typography>
             </Grid>
             <Grid item xs={12}>
-              <FormControl sx={{ m: 1, minWidth: 120, width: '100%' }}>
-                <InputLabel id="demo-simple-select-helper-label">Select your Squad</InputLabel>
-                <Select
-                  labelId="demo-simple-select-helper-label"
-                  id="demo-simple-select-helper"
-                  defaultValue=""
-                  // value={selectedSquad}
-                  label="My Squads"
-                  onChange={handleModalChange}
-                >
-                  {selectedLeague && squadData.map((sq: ISquadData) => {
-                    return <MenuItem key={sq.squadLink} value={sq.squadLink}>{sq.squad.squads.squadName}</MenuItem>
-                  })}
-                </Select>
-                <FormHelperText>Select your squad for {selectedLeague?.name}</FormHelperText>
-              </FormControl>
+              <TableContainer sx={{ maxHeight: 440 }}>
+                <Table stickyHeader aria-label='sticky table'>
+                  <TableHead>
+                    <TableRow>
+                      {columns.map(column => (
+                        <TableCell key={column.id} align={column.align} sx={{ minWidth: column.minWidth }}>
+                          {column.label}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {sortedLeaderboard.map(row => {
+                      return (
+                        <TableRow hover role='checkbox' tabIndex={-1} key={row.userAddress}>
+                          {columns.map(column => {
+                            const value = row[column.id];
+                            return (
+                              <TableCell key={column.id} align={column.align}>
+                                {column.format && typeof value === 'number' ? column.format(value) : value}
+                              </TableCell>
+                            )
+                          })}
+                        </TableRow>
+                      )
+                    })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
             </Grid>
-            <Grid item xs={12}>
-              <Button variant='contained' sx={{ py: 2.5, width: '100%', borderTopLeftRadius: 0, borderTopRightRadius: 0 }} onClick={() => ConfirmParticipation()} disabled={isLoading}>
-                <LoadingButton loading={isLoading}></LoadingButton>
-                Confirm Participation with {selectedLeague?.leaguePrice} BIT
-              </Button>
-            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Button variant='contained' sx={{ py: 2.5, width: '100%', borderTopLeftRadius: 0, borderTopRightRadius: 0 }} onClick={() => CalculateAllLeaderboard()} disabled={isCalculating}>
+              <LoadingButton loading={isCalculating}></LoadingButton>
+              Calculate Leaderboard
+            </Button>
           </Grid>
         </Box>
       </Modal>
       <Grid container>
         {
-          matchLeagues.length > 0 ? (
-            matchLeagues.map((ml: ILeagueData) => {
-              return <Grid key={ml.name} item xs={12} sm={6} md={6} sx={{ pr: 2, pb: 2 }}>
+          userLeagues.length > 0 ? (
+            userLeagues.map((ul: IUserLeagueData) => {
+              return <Grid key={ul.leagueName} item xs={12} sm={6} md={6} sx={{ pr: 2, pb: 2 }}>
                 <Card>
                   <Grid container spacing={6}>
                     <StyledGrid item md={5} xs={12}>
@@ -243,35 +278,22 @@ const AllMatcheLeagues = (props: any) => {
                       xs={12}
                       md={7}
                       sx={{
+                        display: 'flex', flexDirection: 'column', justifyContent: 'center',
                         paddingTop: ['0 !important', '0 !important', '1.5rem !important'],
                         paddingLeft: ['1.5rem !important', '1.5rem !important', '0 !important']
                       }}
                     >
                       <CardContent>
                         <Typography variant='h6' sx={{ marginBottom: 2 }}>
-                          {ml.name}
-                        </Typography>
-                        {/* <Typography variant='body2' sx={{ marginBottom: 3.5 }}>
-                          Apple iPhone 11 Pro smartphone. Announced Sep 2019. Features 5.8″ display Apple A13 Bionic
-                        </Typography> */}
-                        <Typography sx={{ fontWeight: 500, marginBottom: 3 }}>
-                          Price:{' '}
-                          <Box component='span' sx={{ fontWeight: 'bold' }}>
-                            {ml.leaguePrice} BIT
-                          </Box>
-                        </Typography>
-                        <Typography sx={{ fontWeight: 500, marginBottom: 3 }}>
-                          Squad Limit:{' '}
-                          <Box component='span' sx={{ fontWeight: 'bold' }}>
-                            {ml.squadLimit}
-                          </Box>
+                          {ul.leagueName}
                         </Typography>
                       </CardContent>
                       <CardActions className='card-action-dense'>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                          <Button onClick={() => ParticipateInLeague(ml)}>
+
+                          <Button onClick={() => ShowLeaderboardModal(ul)}>
                             <CartPlus fontSize='small' sx={{ marginRight: 2 }} />
-                            Participate with {ml.leaguePrice} BIT
+                            Calculate Leaderboard
                           </Button>
                           <IconButton
                             id='long-button'
@@ -314,7 +336,7 @@ const AllMatcheLeagues = (props: any) => {
             })
           )
             :
-            (<div>No Leagues for the selected match!</div>)
+            (<div>The connected account has not participated in any leagues!</div>)
         }
       </Grid>
     </div >
@@ -330,4 +352,4 @@ const AllMatcheLeagues = (props: any) => {
 //   };
 // }
 
-export default AllMatcheLeagues;
+export default UserLeagues;

@@ -29,12 +29,13 @@ import 'react-datepicker/dist/react-datepicker.css'
 
 import { FetchDataFromIpfsLink, GetLeagueDataIpfsLink, GetSquadDataIpfsLink } from 'src/@core/utils/nftStorage'
 import { ALL_LEAGUES } from 'src/@core/utils/constants'
-import { Alert, Avatar, AvatarGroup, Button, CardActions, CardContent, CardMedia, Collapse, Divider, FormControl, FormHelperText, IconButton, InputLabel, MenuItem, Modal, Typography } from '@mui/material';
+import { Avatar, AvatarGroup, Button, CardActions, CardContent, CardMedia, Collapse, Divider, FormControl, FormHelperText, IconButton, InputLabel, MenuItem, Modal, Typography } from '@mui/material';
 
 import DatastoreAbi from '../../abis/Datastore.json';
 import { DATASTORE_CONTRACT } from 'src/utils/constants';
-import { GetCurrentUTCDateString, GetDateStringFromDate, GetEpochDateTimestampForToday, GetEpochTimestampToday, GetRandomInt } from 'src/utils/utils';
+import { GetCurrentUTCDateString, GetDateFromEpochTs, GetDateStringFromDate, GetEpochDateTimestampForToday, GetEpochSecsForToday, GetEpochTimestampToday, GetRandomInt } from 'src/utils/utils';
 import { useAuth } from 'src/configs/authProvider';
+import { LoadingButton } from '@mui/lab';
 
 interface IMatchData {
   name: string;
@@ -52,36 +53,53 @@ const AllMatches = (props: any) => {
   // ** State
   const { currentAccount, setCurrentAccount } = useAuth();
   const [todaysMatches, setTodaysMatches] = useState<IMatchData[]>([]);
-
+  const [isLoading, setIsLoading] = useState(true);
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
   const dsContract = new ethers.Contract(DATASTORE_CONTRACT, DatastoreAbi.abi, signer);
 
-  async function getAllMatches(dateStr: string) {
+  async function getAllMatchesForDate(dateStr: string) {
     const resp = await dsContract.GetMatches(dateStr);
     console.log("====== contract resp: ", resp, dateStr);
     return resp;
   }
 
+  async function getPreviousMatches() {
+    const todayTs = GetEpochSecsForToday();
+    var finalResp: IMatchData[] = [];
+    for (var i = 1; i <= 10; i++) {
+      const prevMatchResp = await getAllMatchesForDate(String(todayTs + (86400 * i)));
+      prevMatchResp.forEach((element: IMatchData) => {
+        finalResp.push(element);
+      });
+      console.log("======= finalResp: ", finalResp);
+    }
+    return finalResp;
+  }
+
   useEffect(() => {
-    const todayTs = GetEpochDateTimestampForToday();
     (async () => {
-      const allMAtches = await getAllMatches(todayTs);
+      const allMAtches = await getPreviousMatches();
       setTodaysMatches(allMAtches);
-      // console.log("======= today's matches are: ", GetDateStringFromDate(today));
+      setIsLoading(false);
+      // console.log("======= previous matches are: ", todaysMatches);
     })();
   }, []);
 
-  return (
-    <>
-      <Grid container>
-        {
-          todaysMatches?.length > 0 ?
-            todaysMatches.map((m: IMatchData) => {
-              return <div>
-                <Typography variant='h4' sx={{ mb: 2 }}>Today's Matches</Typography>
-                <Grid key={m.name} item xs={12} sm={6} md={4}>
+  if (isLoading) {
+    return (
+      (<LoadingButton loading={isLoading}></LoadingButton>)
+    )
+  } else {
+    return (
+      <>
+        <Typography variant='h4' sx={{ mb: 2 }}>Upcoming Matches</Typography>
+        <Grid container>
+          {
+            todaysMatches?.length > 0 ?
+              todaysMatches.map((m: IMatchData) => {
+                return <Grid key={m.name} item xs={12} sm={6} md={4}>
                   <Card sx={{ position: 'relative', mr: 2 }}>
                     <CardMedia sx={{ height: '0.5rem;' }} image='/images/cards/background-user.png' />
                     <Box sx={{ display: 'flex', justifyContent: "space-between" }}>
@@ -125,14 +143,17 @@ const AllMatches = (props: any) => {
                         <Typography variant='h6' sx={{ whiteSpace: 'wrap', color: 'text.primary' }}>
                           {m.name}
                         </Typography>
+                        <Typography variant='p' sx={{ whiteSpace: 'wrap', color: 'text.primary' }}>
+                          Played On: <b>{GetDateFromEpochTs(m.startDateTime)}</b>
+                        </Typography>
                       </Box>
                     </CardContent>
 
                     <CardContent>
                       <Box sx={{ gap: 2, display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center' }}>
                         {/* <Typography variant='subtitle2' sx={{ whiteSpace: 'nowrap', color: 'text.primary' }}>
-                        Show Leagues
-                      </Typography> */}
+                          Show Leagues
+                        </Typography> */}
                         <Button variant='contained'>
                           <Link href={`/match-leagues/${m.name}`}>Leagues</Link>
                         </Button>
@@ -149,13 +170,13 @@ const AllMatches = (props: any) => {
                     </CardContent>
                   </Card>
                 </Grid>
-              </div>
-            })
-            : <Alert sx={{ width: '100%', display: 'flex', justifyContent: 'center' }} severity="info">No matches scheduled for today!</Alert>
-        }
-      </Grid>
-    </>
-  )
+              })
+              : "No Matches found for the upcoming 10 days"
+          }
+        </Grid>
+      </>
+    )
+  }
 }
 
 // export async function getStaticProps(context: any) {
