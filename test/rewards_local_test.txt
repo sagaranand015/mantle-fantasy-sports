@@ -1,0 +1,12 @@
+Rewards SC deployed to 0xC527a46796D6a52E816580814e3fa68351917C4d
+
+===== Datastore testing
+const rew = await ethers.getContractFactory("LeagueRewards");
+const r = await rew.attach("0xC527a46796D6a52E816580814e3fa68351917C4d");
+
+await r.CreateNft("Welcome League for Beginners", "India vs Australia WT20 WC 1st ODI", "Winner", "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", "0xf4267F20B463421D2cF3db534491b7920F79Ac4F");
+
+await r.GetUserRewards("0xf4267F20B463421D2cF3db534491b7920F79Ac4F");
+
+await r.GetUserRewards("0xDeC6Df558e198A7745AcBe881f61B3506D59CFC4");
+

@@ -33,14 +33,15 @@ import { Alert, Avatar, AvatarGroup, Button, CardActions, CardContent, CardMedia
 import Table from '@mui/material/Table';
 import TableRow from '@mui/material/TableRow';
 import LeagueAbi from '../../../abis/LeagueX3.json';
-import { DEMO_SQUAD01, DEMO_SQUAD02, LEAGUE_CONTRACT } from 'src/utils/constants';
+import LeagueRewardsAbi from '../../../abis/LeagueRewards.json';
+import { CONSOLATION_NFT_IMAGE, DEMO_SQUAD01, DEMO_SQUAD02, LEAGUE_CONTRACT, REWARDS_CONTRACT, RUNNERSUP_NFT_IMAGE, SECOND_RUNNERSUP_NFT_IMAGE, WINNER_NFT_IMAGE } from 'src/utils/constants';
 import { useRouter } from 'next/router';
 import { GridProps } from '@mui/system';
 import { BookLock, CartPlus, Facebook, GooglePlus, Linkedin, ShareVariant, Twitter } from 'mdi-material-ui';
 import { useAuth } from 'src/configs/authProvider';
 import { LoadingButton } from '@mui/lab';
 import { SlowBuffer } from 'buffer';
-import { GetLeagueMatchFromLeagueName, GetRandomPointsForUser } from 'src/utils/utils';
+import { GetLeagueMatchFromLeagueName, GetRandomPointsForUser, shortenAddress } from 'src/utils/utils';
 
 interface ILeagueData {
   name: string;
@@ -56,7 +57,7 @@ interface ILeagueData {
 };
 
 interface Column {
-  id: 'userAddress' | 'totalPoints' | 'position'
+  id: 'userAddress' | 'totalPoints' | 'position' | 'action'
   label: string
   minWidth?: number
   align?: 'right'
@@ -69,6 +70,13 @@ const columns: readonly Column[] = [
   {
     id: 'position',
     label: 'position',
+    minWidth: 170,
+    align: 'right',
+    format: (value: number) => value.toLocaleString('en-US')
+  },
+  {
+    id: 'action',
+    label: 'Actions',
     minWidth: 170,
     align: 'right',
     format: (value: number) => value.toLocaleString('en-US')
@@ -112,6 +120,7 @@ interface ILeaderboardData {
   isRunnersUp: boolean;
   isSecondRunnersUp: boolean;
   isConsolationWinner: boolean;
+  title: string;
 }
 
 interface ISortedLeaderboardData {
@@ -122,6 +131,7 @@ interface ISortedLeaderboardData {
   isRunnersUp: boolean;
   isSecondRunnersUp: boolean;
   isConsolationWinner: boolean;
+  title: string;
 }
 
 const UserLeagues = (props: any) => {
@@ -135,6 +145,7 @@ const UserLeagues = (props: any) => {
     setAnchorEl(null)
   }
 
+  const [matchLeaguesLoaded, setMatchLeaguesLoaded] = useState(false);
   const [matchLeagues, setMatchLeagues] = useState<ILeagueData[]>([]);
   const [leagueLeaderboard, setLeagueLeaderboard] = useState<ILeaderboardData[]>([]);
   const [sortedLeaderboard, setSortedLeaderboard] = useState<ISortedLeaderboardData[]>([]);
@@ -156,6 +167,7 @@ const UserLeagues = (props: any) => {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
   const lContract = new ethers.Contract(LEAGUE_CONTRACT, LeagueAbi.abi, signer);
+  const rewardsContract = new ethers.Contract(REWARDS_CONTRACT, LeagueRewardsAbi.abi, signer);
 
   const router = useRouter();
   const matchName = router.query.matchName as string
@@ -163,6 +175,12 @@ const UserLeagues = (props: any) => {
   async function getAllMatchLeagues() {
     const resp = await lContract.GetLeagues(matchName);
     console.log("====== getMatchLeagues contract resp: ", resp);
+    return resp;
+  }
+
+  async function MintNFTReward(leagueName: string, matchName: string, user_address: string, title: string, nftIpfsLink: string, nftImg: string) {
+    const resp = await rewardsContract.CreateNft(leagueName, matchName, title, nftIpfsLink, nftImg, user_address);
+    console.log("====== MintNFTReward contract resp: ", resp);
     return resp;
   }
 
@@ -181,6 +199,7 @@ const UserLeagues = (props: any) => {
       isRunnersUp: obj.isRunnersUp,
       isSecondRunnersUp: obj.isSecondRunnersUp,
       isConsolationWinner: obj.isConsolationWinner,
+      title: obj.title,
     };
   }
 
@@ -188,29 +207,6 @@ const UserLeagues = (props: any) => {
     setShowSortedLeaderboard(false);
     setModalOpen(true);
     setSelectedLeague(league);
-    // const leagueMatch = GetLeagueMatchFromLeagueName(league.leagueName);
-    // const resp = await getLeagueLeaderboard(leagueMatch.league, leagueMatch.match);
-    // console.log("======= GetLeagueLeaderBoard are: ", resp);
-    // if (resp) {
-    //   var toBeSorted: ILeaderboardData[] = [];
-    //   for (var i = 0; i < resp.length; i++) {
-    //     toBeSorted.push(resp[i]);
-    //   }
-    //   toBeSorted.sort(function (a: ILeaderboardData, b: ILeaderboardData) {
-    //     return b.totalPoints - a.totalPoints;
-    //   });
-    //   // array is sorted now
-    //   var localSorted: ISortedLeaderboardData[] = []
-    //   for (var i = 0; i < toBeSorted.length; i++) {
-    //     localSorted.push(createSortedData(toBeSorted[i].userAddress, toBeSorted[i].totalPoints, i + 1));
-    //   }
-    //   setSortedLeaderboard(localSorted);
-    //   setModalOpen(true);
-    //   setLeagueLeaderboard(toBeSorted);
-    //   setSelectedLeague(league);
-    //   console.log("======= leagueLeaderboard are: ", sortedLeaderboard);
-    //   // setShowSortedLeaderboard(true);
-    // }
   }
 
   async function calculateLeagueLeaderboard(leagueName: string, matchName: string, objs: ILeaderboardData[]) {
@@ -245,6 +241,7 @@ const UserLeagues = (props: any) => {
             isRunnersUp: ll.isRunnersUp,
             isSecondRunnersUp: ll.isSecondRunnersUp,
             isConsolationWinner: ll.isConsolationWinner,
+            title: "",
           }
           all_reqs.push(sim_obj);
           console.log("===== simulated request: ", sim_obj);
@@ -267,12 +264,16 @@ const UserLeagues = (props: any) => {
 
           for (var i = 0; i < toBeSorted.length; i++) {
             toBeSorted[0].isWinner = true;
+            toBeSorted[0].title = "Winner";
             if (i == 1) {
               toBeSorted[1].isRunnersUp = true;
+              toBeSorted[1].title = "Runners-Up";
             } else if (i == 2) {
-              toBeSorted[1].isSecondRunnersUp = true;
+              toBeSorted[2].isSecondRunnersUp = true;
+              toBeSorted[2].title = "Second Runners-Up";
             } else if (i == 3) {
               toBeSorted[3].isConsolationWinner = true;
+              toBeSorted[3].title = "Consolation Price Winner";
             }
             toBeSorted[i].position = i + 1;
             localSorted.push(toBeSorted[i]);
@@ -300,11 +301,35 @@ const UserLeagues = (props: any) => {
     }
   }
 
+  async function MintNfts(user_addr: string, title: string) {
+    if (selectedLeague) {
+      console.log("======= mointing NFT...", selectedLeague, user_addr, title);
+      var nftIpfs = "";
+      var nftImg = "";
+      if (title.startsWith("Winner")) {
+        nftIpfs = WINNER_NFT_IMAGE;
+        nftImg = WINNER_NFT_IMAGE;
+      } else if (title.startsWith("Runners")) {
+        nftIpfs = RUNNERSUP_NFT_IMAGE;
+        nftImg = RUNNERSUP_NFT_IMAGE;
+      } else if (title.startsWith("Second")) {
+        nftIpfs = SECOND_RUNNERSUP_NFT_IMAGE;
+        nftImg = SECOND_RUNNERSUP_NFT_IMAGE;
+      } else if (title.startsWith("Consolation")) {
+        nftIpfs = CONSOLATION_NFT_IMAGE;
+        nftImg = CONSOLATION_NFT_IMAGE;
+      }
+      const rr = await MintNFTReward(selectedLeague.name, selectedLeague.matchName, user_addr, title, nftIpfs, nftImg);
+      console.log("mint nft response: ", rr);
+    }
+  }
+
   useEffect(() => {
     (async () => {
       const uLeagues = await getAllMatchLeagues();
       // setUserLeagues(uLeagues);
       setMatchLeagues(uLeagues);
+      setMatchLeaguesLoaded(true);
       console.log("======= matchLeagues are: ", matchLeagues);
     })();
   }, []);
@@ -364,9 +389,15 @@ const UserLeagues = (props: any) => {
                 Simulate Player Points
               </Button>
               {isSimulationDone ?
-                <Alert sx={{ width: '100%', display: 'flex', justifyContent: 'center', mt: 2 }} severity="info">
-                  Simulation is done. In production environment, this transaction will be performed by an automated workflow on an L2 Chain.
-                </Alert> : ""}
+                <div>
+                  <Alert sx={{ width: '100%', display: 'flex', justifyContent: 'center', mt: 2 }} severity="info">
+                    Simulation is done. In production environment, this transaction will be performed by an automated workflow on an L2 Chain.
+                  </Alert>
+                  <Button variant='contained' sx={{ py: 2.5, width: '100%', mt: 2, borderTopLeftRadius: 0, borderTopRightRadius: 0 }} onClick={() => FinalizeLeaderboard()} disabled={isCalculating}>
+                    <LoadingButton loading={isCalculating}></LoadingButton>
+                    Finalize Leaderboard
+                  </Button>
+                </div> : ""}
 
               {showSortedLeaderboard ?
                 <div>
@@ -387,12 +418,32 @@ const UserLeagues = (props: any) => {
                             return (
                               <TableRow hover role='checkbox' tabIndex={-1} key={row.userAddress}>
                                 {columns.map(column => {
-                                  const value = row[column.id];
-                                  return (
-                                    <TableCell key={column.id} align={column.align}>
-                                      {column.format && typeof value === 'number' ? column.format(value) : value}
-                                    </TableCell>
-                                  )
+                                  if (column.id == "action") {
+                                    const res = row["title"];
+                                    if (res == "") {
+                                      return
+                                    }
+                                    const uaddr = row["userAddress"];
+                                    return (
+                                      <TableCell key={column.id} align={column.align}>
+                                        <Button variant='contained' sx={{ py: 2.5, width: '100%', mt: 2, borderTopLeftRadius: 0, borderTopRightRadius: 0 }} onClick={() => MintNfts(uaddr, res)} disabled={isCalculating}>
+                                          Mint {res} NFT
+                                        </Button>
+                                      </TableCell>
+                                    )
+                                  } else if (column.id == "userAddress") {
+                                    return (<TableCell key={column.id} align={column.align}>
+                                      {shortenAddress(row[column.id])}
+                                    </TableCell>)
+                                  }
+                                  else {
+                                    const value = row[column.id];
+                                    return (
+                                      <TableCell key={column.id} align={column.align}>
+                                        {column.format && typeof value === 'number' ? column.format(value) : value}
+                                      </TableCell>
+                                    )
+                                  }
                                 })}
                               </TableRow>
                             )
@@ -402,10 +453,14 @@ const UserLeagues = (props: any) => {
                     </TableContainer>
                   </Grid>
                   <Grid item xs={12}>
-                    <Button variant='contained' sx={{ py: 2.5, width: '100%', borderTopLeftRadius: 0, borderTopRightRadius: 0 }} onClick={() => FinalizeLeaderboard()} disabled={isCalculating}>
+                    {/* <Button variant='contained' sx={{ py: 2.5, width: '100%', mt: 2, borderTopLeftRadius: 0, borderTopRightRadius: 0 }} onClick={() => FinalizeLeaderboard()} disabled={isCalculating}>
+                      <LoadingButton loading={isCalculating}></LoadingButton>
+                      Distribute Rewards
+                    </Button> */}
+                    {/* <Button variant='contained' sx={{ py: 2.5, width: '100%', borderTopLeftRadius: 0, borderTopRightRadius: 0 }} onClick={() => FinalizeLeaderboard()} disabled={isCalculating}>
                       <LoadingButton loading={isCalculating}></LoadingButton>
                       Finalize Leaderboard
-                    </Button>
+                    </Button> */}
                   </Grid>
                 </div>
                 :
@@ -496,7 +551,8 @@ const UserLeagues = (props: any) => {
             })
           )
             :
-            (<div>The connected account has not participated in any leagues!</div>)
+            matchLeaguesLoaded ? (<div>No leagues available for the selected match!</div>) : (<LoadingButton loading={!matchLeaguesLoaded}></LoadingButton>)
+
         }
       </Grid>
     </div >

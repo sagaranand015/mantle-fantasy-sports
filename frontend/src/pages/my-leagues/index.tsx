@@ -40,11 +40,11 @@ import { CartPlus, Facebook, GooglePlus, Linkedin, ShareVariant, Twitter } from 
 import { useAuth } from 'src/configs/authProvider';
 import { LoadingButton } from '@mui/lab';
 import { SlowBuffer } from 'buffer';
-import { GetLeagueMatchFromLeagueName, GetSquadCount } from 'src/utils/utils';
+import { GetLeagueMatchFromLeagueName, GetSquadCount, shortenAddress } from 'src/utils/utils';
 import { auto } from '@popperjs/core';
 
 interface Column {
-  id: 'userAddress' | 'totalPoints' | 'position' | 'squads'
+  id: 'userAddress' | 'totalPoints' | 'position' | 'squads' | 'title'
   label: string
   minWidth?: number
   align?: 'right'
@@ -52,6 +52,7 @@ interface Column {
 }
 
 const columns: readonly Column[] = [
+  { id: 'title', label: 'Title', minWidth: 170 },
   { id: 'userAddress', label: 'Address', minWidth: 170 },
   { id: 'totalPoints', label: 'totalPoints', minWidth: 100 },
   {
@@ -103,13 +104,24 @@ interface IUserLeagueData {
 interface ILeaderboardData {
   userAddress: string;
   totalPoints: number;
+  position: number;
+  isWinner: boolean;
+  isRunnersUp: boolean;
+  isSecondRunnersUp: boolean;
+  isConsolationWinner: boolean;
+  title: string;
 }
 
 interface ISortedLeaderboardData {
   userAddress: string;
   totalPoints: number;
   position: number;
+  isWinner: boolean;
+  isRunnersUp: boolean;
+  isSecondRunnersUp: boolean;
+  isConsolationWinner: boolean;
   squads: number;
+  title: string;
 }
 
 const UserLeagues = (props: any) => {
@@ -149,40 +161,47 @@ const UserLeagues = (props: any) => {
   }
 
   async function getLeagueLeaderboard(leagueName: string, matchName: string) {
-
-    console.log("==== getting leaderboard data: ", leagueName, matchName);
-
     const resp = await lContract.GetLeagueLeaderboard(leagueName, matchName);
     console.log("====== getLeagueLeaderboard contract resp: ", resp);
     return resp;
   }
 
-  function createSortedData(userAddress: string, totalPoints: number, position: number, squadList: string): ISortedLeaderboardData {
-    const squads = GetSquadCount(squadList);
-    return { userAddress, totalPoints, position, squads };
+  function createSortedData(obj: ILeaderboardData, squadList: string): ISortedLeaderboardData {
+    const sqs = GetSquadCount(squadList);
+    return {
+      userAddress: shortenAddress(obj.userAddress),
+      totalPoints: obj.totalPoints,
+      position: obj.position,
+      isWinner: obj.isWinner,
+      isRunnersUp: obj.isRunnersUp,
+      isSecondRunnersUp: obj.isSecondRunnersUp,
+      isConsolationWinner: obj.isConsolationWinner,
+      squads: sqs,
+      title: obj.title,
+    };
   }
 
   async function ShowLeaderboardModal(league: IUserLeagueData) {
     const leagueMatch = GetLeagueMatchFromLeagueName(league.leagueName);
     const resp = await getLeagueLeaderboard(leagueMatch.league, leagueMatch.match);
-    console.log("======= GetLeagueLeaderBoard are: ", resp);
+    console.log("======= GetLeagueLeaderBoard are::::::::: ", resp);
     if (resp) {
-      var toBeSorted: ILeaderboardData[] = [];
-      for (var i = 0; i < resp.length; i++) {
-        toBeSorted.push(resp[i]);
-      }
-      toBeSorted.sort(function (a: ILeaderboardData, b: ILeaderboardData) {
-        return b.totalPoints - a.totalPoints;
-      });
+      // var toBeSorted: ILeaderboardData[] = [];
+      // for (var i = 0; i < resp.length; i++) {
+      //   toBeSorted.push(resp[i]);
+      // }
+      // toBeSorted.sort(function (a: ILeaderboardData, b: ILeaderboardData) {
+      //   return b.totalPoints - a.totalPoints;
+      // });
 
       // array is sorted now
       var localSorted: ISortedLeaderboardData[] = []
-      for (var i = 0; i < toBeSorted.length; i++) {
-        localSorted.push(createSortedData(toBeSorted[i].userAddress, toBeSorted[i].totalPoints, i + 1, league.squads));
+      for (var i = 0; i < resp.length; i++) {
+        localSorted.push(createSortedData(resp[i], league.squads));
       }
       setSortedLeaderboard(localSorted);
       setModalOpen(true);
-      setLeagueLeaderboard(toBeSorted);
+      // setLeagueLeaderboard(toBeSorted);
       console.log("======= leagueLeaderboard are: ", sortedLeaderboard);
     }
   }

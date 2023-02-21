@@ -28,6 +28,7 @@ contract LeagueX3 {
         bool isRunnersUp;
         bool isSecondRunnersUp;
         bool isConsolationWinner;
+        string title;
     }
 
     // this mapping is between the matchipfsLink obtained from datastore =>
@@ -76,6 +77,7 @@ contract LeagueX3 {
                     allLeaderboards[i].isSecondRunnersUp = userLeaderboardData[
                         j
                     ].isSecondRunnersUp;
+                    allLeaderboards[i].title = userLeaderboardData[j].title;
                     allLeaderboards[i]
                         .isConsolationWinner = userLeaderboardData[j]
                         .isConsolationWinner;
@@ -109,6 +111,7 @@ contract LeagueX3 {
                     allLeaderboards[i].isRunnersUp = false;
                     allLeaderboards[i].isSecondRunnersUp = false;
                     allLeaderboards[i].isConsolationWinner = false;
+                    allLeaderboards[i].title = "";
                     exists = true;
                     break;
                 }
@@ -123,7 +126,8 @@ contract LeagueX3 {
                 false,
                 false,
                 false,
-                false
+                false,
+                ""
             );
             allLeaderboards.push(lbData);
             leagueLeaderboard[finalName] = allLeaderboards;
@@ -264,7 +268,8 @@ contract LeagueX3 {
             false,
             false,
             false,
-            false
+            false,
+            ""
         );
         leaderboardData[] storage leaderBoardData = leagueLeaderboard[
             finalName

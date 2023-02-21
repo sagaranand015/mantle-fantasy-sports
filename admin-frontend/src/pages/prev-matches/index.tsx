@@ -60,6 +60,7 @@ const AllMatches = (props: any) => {
   const dsContract = new ethers.Contract(DATASTORE_CONTRACT, DatastoreAbi.abi, signer);
 
   async function getAllMatchesForDate(dateStr: string) {
+    console.log("====== contract request: ", dateStr);
     const resp = await dsContract.GetMatches(dateStr);
     console.log("====== contract resp: ", resp, dateStr);
     return resp;
@@ -68,7 +69,7 @@ const AllMatches = (props: any) => {
   async function getPreviousMatches() {
     const todayTs = GetEpochSecsForToday();
     var finalResp: IMatchData[] = [];
-    for (var i = 1; i <= 10; i++) {
+    for (var i = 1; i <= 5; i++) {
       const prevMatchResp = await getAllMatchesForDate(String(todayTs - (86400 * i)));
       prevMatchResp.forEach((element: IMatchData) => {
         finalResp.push(element);

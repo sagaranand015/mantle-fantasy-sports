@@ -1,10 +1,10 @@
 
-LeagueX3 SC deployed to 0x7b3956199623eC181755e1926280FF8CE714C71D
+LeagueX3 SC deployed to 0x7616D35D53f15682d56D0D5cB04D0CDc53CFEFcC
 
 
 ==== leagueX3 SC testing
 const l = await ethers.getContractFactory("LeagueX3");
-const leagueX3 = await l.attach("0x7b3956199623eC181755e1926280FF8CE714C71D");
+const leagueX3 = await l.attach("0x7616D35D53f15682d56D0D5cB04D0CDc53CFEFcC");
 
 await leagueX3.CreateUpdateLeague("India vs Australia WT20 WC 1st ODI", "Welcome League for Beginners", "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", "ipfs://bafkreidud6zwwtqpmah76oig2lnpguy6grlrwxmnw763xl7vsvfvuwgtcq",  "INDIA", "AUSTRALIA", false, false, 20, 1);
 

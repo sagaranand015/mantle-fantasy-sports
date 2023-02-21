@@ -82,6 +82,24 @@ contract Datastore {
         return (matchesMapping[date]);
     }
 
+    // function GetMatchesForDates(string[] memory dates)
+    //     public
+    //     view
+    //     returns (matches[] memory)
+    // {
+    //     if (dates.length > 0) {
+    //         matches[] storage allMatches = matchesMapping[dates[0]];
+    //         for (uint32 i = 1; i < dates.length; i++) {
+    //             matches[] storage m = matchesMapping[dates[i]];
+    //             for (uint32 j = 0; j < m.length; j++) {
+    //                 allMatches.push(m[j]);
+    //             }
+    //         }
+    //     }
+
+    //     // return (matchesMapping[date]);
+    // }
+
     function CreateUpdateTeam(
         string memory team,
         string memory pName,

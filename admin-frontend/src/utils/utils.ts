@@ -62,6 +62,12 @@ export function GetLeagueMatchFromLeagueName(leagueName: string): ILeagueMatch {
 
 }
 
+export function shortenAddress(address: string) {
+    if (address)
+        return address.substring(0, 6) + "..." + address.substring(address.length - 4, address.length)
+    return "";
+}
+
 export function GetDateFromEpochTs(epochTs: BigNumber) {
     var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
     d.setUTCSeconds(epochTs.toNumber());
