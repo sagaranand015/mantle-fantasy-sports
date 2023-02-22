@@ -21,7 +21,7 @@ import UserDropdown from 'src/@core/layouts/components/shared-components/UserDro
 import NotificationDropdown from 'src/@core/layouts/components/shared-components/NotificationDropdown'
 import { useAuth } from 'src/configs/authProvider'
 import { useEffect, useState } from 'react'
-import { Button } from '@mui/material'
+import { Alert, Button, Typography } from '@mui/material'
 import Chip from '@mui/material/Chip';
 
 interface Props {
@@ -69,6 +69,9 @@ const AppBarContent = (props: Props) => {
     <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
       <Box className='actions-left' sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
         {admin ? (<Chip label="Admin Account" />) : (<div></div>)}
+        <Alert sx={{ display: 'flex', justifyContent: 'center', ml: 5 }} severity="info">
+          Please make sure Mantle Testnet is selected in Metamask. Project won't work otherwise!
+        </Alert>
       </Box>
       <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center' }}>
         <ModeToggler settings={settings} saveSettings={saveSettings} />

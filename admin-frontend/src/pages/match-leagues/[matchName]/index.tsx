@@ -357,7 +357,12 @@ const UserLeagues = (props: any) => {
               {isSimulationDone ?
                 <div>
                   <Alert sx={{ width: '100%', display: 'flex', justifyContent: 'center', mt: 2 }} severity="info">
-                    Simulation is done. In production environment, this transaction will be performed by an automated workflow on an L2 Chain.
+                    Simulation is done. <br />
+                    In production environment, this simulation transaction is a compuatationally heavy and should be performed on a L2 chain (like Mantle). For Demo purposes, this transaction is being executed by the admin.
+                    <br /><br />
+                    The following Finalize Leaderboard transaction sets up the final leaderboard data on the main L1 chain. This transaction again would be executed by the Mantle SDK with data received from the above transaction. For Demo purposes, this is being executed by the admin.
+                    <br /><br />
+                    Please refer to the <a href='https://drive.google.com/file/d/1zDG664cy-aAiEZ4Q_26ameDeKRoCaJx6/view?usp=share_link' target='_blank'>Architecture Diagram</a> and <a href='https://github.com/sagaranand015/mantle-fantasy-sports/blob/main/README.md' target='_blank'>Project README</a> for more details.
                   </Alert>
                   <Button variant='contained' sx={{ py: 2.5, width: '100%', mt: 2, borderTopLeftRadius: 0, borderTopRightRadius: 0 }} onClick={() => FinalizeLeaderboard()} disabled={isCalculating}>
                     <LoadingButton loading={isCalculating}></LoadingButton>

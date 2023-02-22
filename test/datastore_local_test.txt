@@ -1,10 +1,43 @@
-Datstore SC deployed to 0x6A4c21CcA84905B95Ba26F109Aa294783CaC1bcC
+Datstore SC deployed to 0x2c7aF0B5a7cd6E777E14F9CB6213195f5aD450B1
 
 ===== Datastore testing
 const d = await ethers.getContractFactory("Datastore");
-const dst = await d.attach("0x6A4c21CcA84905B95Ba26F109Aa294783CaC1bcC");
-await dst.CreateUpdateMatches("1676764800", "India vs Australia Border Gavaskar Trophy 2nd Test Match", "INDIA", "AUSTRALIA", 1676592000, 1676851200, "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", false, true, false);
+const dst = await d.attach("0x2c7aF0B5a7cd6E777E14F9CB6213195f5aD450B1");
 
-await dst.CreateUpdateMatches("1676764800", "India vs Australia WT20 WC 1st ODI", "INDIA", "AUSTRALIA", 1676592000, 1676678400, "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", false, true, false);
+== on 21st feb
+await dst.CreateUpdateMatches("1676937600", "India vs Australia Border Gavaskar Trophy 1st ODI Match", "INDIA", "AUSTRALIA", 1676937600, 1676937600, "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", false, true, false);
+await dst.CreateUpdateMatches("1676937600", "India vs Australia WT20 WC 1st T20 WC Match", "INDIA", "AUSTRALIA", 1676937600, 1676937600, "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", false, true, false);
 
-await dst.GetMatches("1676764800");
+await dst.GetMatches("1676937600");
+
+== on 22nd feb
+await dst.CreateUpdateMatches("1677024000", "India vs Australia Border Gavaskar Trophy 2nd ODI Match", "INDIA", "AUSTRALIA", 1677024000, 1677024000, "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", false, true, false);
+await dst.CreateUpdateMatches("1677024000", "India vs Australia WT20 WC 2nd T20 WC Match", "INDIA", "AUSTRALIA", 1677024000, 1677024000, "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", false, true, false);
+
+========== DONE TILL HERE ==========
+
+== on 23rd feb   
+await dst.CreateUpdateMatches("1677110400", "India vs Australia Border Gavaskar Trophy 3rd ODI Match", "INDIA", "AUSTRALIA", 1677110400, 1677110400, "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", false, true, false);
+await dst.CreateUpdateMatches("1677110400", "India vs Ireland WT20 WC 1st T20 WC Match", "INDIA", "IRELAND", 1677110400, 1677110400, "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", false, true, false);
+
+== on 24th feb  
+await dst.CreateUpdateMatches("1677196800", "India vs Australia Border Gavaskar Trophy 4th ODI Match", "INDIA", "AUSTRALIA", 1677196800, 1677196800, "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", false, true, false);
+await dst.CreateUpdateMatches("1677196800", "India vs Australia WT20 WC 3rd T20 WC Match", "INDIA", "AUSTRALIA", 1677196800, 1677196800, "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", false, true, false);
+
+== on 25th feb  
+await dst.CreateUpdateMatches("1677283200", "India vs Australia Border Gavaskar Trophy 5th ODI Match", "INDIA", "AUSTRALIA", 1677283200, 1677283200, "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", false, true, false);
+await dst.CreateUpdateMatches("1677283200", "India vs Pakistan WT20 WC 1st T20 WC Match", "INDIA", "PAKISTAN", 1677283200, 1677283200, "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", false, true, false);
+
+== on 26th feb  
+await dst.CreateUpdateMatches("1677369600", "India vs England Border Trophy 1st T20I", "INDIA", "ENGLAND", 1677369600, 1677369600, "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", false, true, false);
+await dst.CreateUpdateMatches("1677369600", "India vs Pakistan WT20 WC 2nd T20 WC Match", "INDIA", "PAKISTAN", 1677369600, 1677369600, "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", false, true, false);
+
+== on 27th feb  
+await dst.CreateUpdateMatches("1677456000", "India vs England Border Trophy 2nd T20I", "INDIA", "ENGLAND", 1677456000, 1677456000, "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", false, true, false);
+await dst.CreateUpdateMatches("1677456000", "India vs Pakistan WT20 WC 3rd T20 WC Match", "INDIA", "PAKISTAN", 1677456000, 1677456000, "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", false, true, false);
+
+== on 28th feb 
+await dst.CreateUpdateMatches("1677542400", "India vs England Border Trophy 3rd T20I", "INDIA", "ENGLAND", 1677542400, 1677542400, "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", false, true, false);
+await dst.CreateUpdateMatches("1677542400", "India vs England WT20 WC 1st T20 WC Match", "INDIA", "ENGLAND", 1677542400, 1677542400, "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", false, true, false);
+
+

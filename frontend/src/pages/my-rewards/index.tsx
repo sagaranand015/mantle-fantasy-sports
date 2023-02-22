@@ -178,7 +178,7 @@ const UserRewards = (props: any) => {
               </Grid>
               // </div>
             })
-            : <Alert sx={{ width: '100%', display: 'flex', justifyContent: 'center' }} severity="info">No matches scheduled for today!</Alert>
+            : <Alert sx={{ width: '100%', display: 'flex', justifyContent: 'center' }} severity="info">No Reward NFTs minted for the connected account yet!</Alert>
         }
       </Grid>
     </>

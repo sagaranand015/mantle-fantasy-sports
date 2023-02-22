@@ -23,18 +23,29 @@ Our Solution plans to remediate the above 2 game development pain points by crea
 The following high level diagram explains the framework approach and the usage of mantle SDK with both L1 and L2 chains. 
 ![Framework Architecture](./docs/mantle-hack.jpg)
 
+## Demo Leaderboard Functionality
+![Framework Architecture](./docs/league-leaderboard.png)
+
+This workflow is available in the admin app and the connected account can be used to:
+
+1. Simulate Player Points: This is a transaction that will be executed on the L2 chain for lower gas consumption and maintaining transaction traceability. The results of this calculation are then relayed to the L1 chain where the driving Smart Contract is deployed. 
+
+2. Finalize Leaderboard: In production environment, this transaction would be executed by the Mantle SDK which essentially calls the L1 contract from the L2 chain with the results obtained from [1] above. 
+
+Note: Both these transactions have been enabled manually for demonstration purposes. 
+
 ## Deployed Smart Contracts
 1. Datastore Smart Contract containing the matches and leagues information
 ```
-something
+[0x2c7aF0B5a7cd6E777E14F9CB6213195f5aD450B1](https://explorer.testnet.mantle.xyz/address/0x2c7aF0B5a7cd6E777E14F9CB6213195f5aD450B1)
 ```
 2. League Smart Contract responsible for user participation and managing leaderboards for a league
 ```
-something
+[0x656F7c6dc0747AC8e64BF013a14e56F7dA68308A](https://explorer.testnet.mantle.xyz/address/0x656F7c6dc0747AC8e64BF013a14e56F7dA68308A)
 ```
 3. LeagueRewards Smart Contract responsible for managing League Reward NFTs and other winnings for the participating users
 ```
-something
+[0x700E9BeBA6db645380d9FC59C1b25509B41FEa7a](https://explorer.testnet.mantle.xyz/address/0x700E9BeBA6db645380d9FC59C1b25509B41FEa7a)
 ```
 
 ## Running the client frontend

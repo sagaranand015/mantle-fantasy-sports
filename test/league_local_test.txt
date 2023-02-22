@@ -1,21 +1,48 @@
 
-LeagueX3 SC deployed to 0xD7cF05143e9A712B032fE4c1Db1Df5ED2E9468c6
+LeagueX3 SC deployed to 0x656F7c6dc0747AC8e64BF013a14e56F7dA68308A
 
 
 ==== leagueX3 SC testing
 const l = await ethers.getContractFactory("LeagueX3");
-const leagueX3 = await l.attach("0xD7cF05143e9A712B032fE4c1Db1Df5ED2E9468c6");
+const leagueX3 = await l.attach("0x656F7c6dc0747AC8e64BF013a14e56F7dA68308A");
 
-await leagueX3.CreateUpdateLeague("India vs Australia WT20 WC 1st ODI", "Welcome League for Beginners", "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", "ipfs://bafkreidud6zwwtqpmah76oig2lnpguy6grlrwxmnw763xl7vsvfvuwgtcq",  "INDIA", "AUSTRALIA", false, false, 20, 1);
+== on 21st feb 
+await leagueX3.CreateUpdateLeague("India vs Australia Border Gavaskar Trophy 1st ODI Match", "Infinity Battle League ", "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", "ipfs://bafkreidud6zwwtqpmah76oig2lnpguy6grlrwxmnw763xl7vsvfvuwgtcq",  "INDIA", "AUSTRALIA", false, false, 10, 1);
 
-await leagueX3.CreateUpdateLeague("India vs Australia WT20 WC 1st ODI", "Millionaire Elastic League", "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", "ipfs://bafkreidud6zwwtqpmah76oig2lnpguy6grlrwxmnw763xl7vsvfvuwgtcq",  "INDIA", "AUSTRALIA", false, false, 10, 1);
+await leagueX3.CreateUpdateLeague("India vs Australia Border Gavaskar Trophy 1st ODI Match", "Millionaire Elastic League", "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", "ipfs://bafkreidud6zwwtqpmah76oig2lnpguy6grlrwxmnw763xl7vsvfvuwgtcq",  "INDIA", "AUSTRALIA", false, false, 20, 1);
 
-await leagueX3.CreateUpdateLeague("India vs Australia WT20 WC 1st ODI", "Infinity Battle Elastic League", "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", "ipfs://bafkreidud6zwwtqpmah76oig2lnpguy6grlrwxmnw763xl7vsvfvuwgtcq",  "INDIA", "AUSTRALIA", false, false, 200, 10);
+await leagueX3.GetLeagues("India vs Australia Border Gavaskar Trophy 1st ODI Match");
 
-await leagueX3.GetLeagues("India vs Australia WT20 WC 1st ODI");
+await leagueX3.CreateUpdateLeague("India vs Australia WT20 WC 1st T20 WC Match", "Infinity Battle League ", "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", "ipfs://bafkreidud6zwwtqpmah76oig2lnpguy6grlrwxmnw763xl7vsvfvuwgtcq",  "INDIA", "AUSTRALIA", false, false, 10, 1);
 
+await leagueX3.CreateUpdateLeague("India vs Australia WT20 WC 1st T20 WC Match", "Millionaire Elastic League", "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", "ipfs://bafkreidud6zwwtqpmah76oig2lnpguy6grlrwxmnw763xl7vsvfvuwgtcq",  "INDIA", "AUSTRALIA", false, false, 20, 1);
+
+await leagueX3.GetLeagues("India vs Australia Border Gavaskar Trophy 1st ODI Match");
+
+== on 22nd feb
+
+await leagueX3.CreateUpdateLeague("India vs Australia Border Gavaskar Trophy 2nd ODI Match", "Infinity Battle League ", "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", "ipfs://bafkreidud6zwwtqpmah76oig2lnpguy6grlrwxmnw763xl7vsvfvuwgtcq",  "INDIA", "AUSTRALIA", false, false, 10, 1);
+
+await leagueX3.CreateUpdateLeague("India vs Australia Border Gavaskar Trophy 2nd ODI Match", "Millionaire Elastic League", "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", "ipfs://bafkreidud6zwwtqpmah76oig2lnpguy6grlrwxmnw763xl7vsvfvuwgtcq",  "INDIA", "AUSTRALIA", false, false, 20, 1);
+
+await leagueX3.GetLeagues("India vs Australia Border Gavaskar Trophy 2nd ODI Match");
+
+await leagueX3.CreateUpdateLeague("India vs Australia WT20 WC 2nd T20 WC Match", "Infinity Battle League ", "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", "ipfs://bafkreidud6zwwtqpmah76oig2lnpguy6grlrwxmnw763xl7vsvfvuwgtcq",  "INDIA", "AUSTRALIA", false, false, 10, 1);
+
+await leagueX3.CreateUpdateLeague("India vs Australia WT20 WC 2nd T20 WC Match", "Millionaire Elastic League", "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", "ipfs://bafkreidud6zwwtqpmah76oig2lnpguy6grlrwxmnw763xl7vsvfvuwgtcq",  "INDIA", "AUSTRALIA", false, false, 20, 1);
+
+await leagueX3.GetLeagues("India vs Australia WT20 WC 2nd T20 WC Match");
+
+
+
+
+
+
+
+
+
+====== ONLY FOR DEMO
 await leagueX3.GetAllUserParticipation("0xf4267F20B463421D2cF3db534491b7920F79Ac4F");
-
 await leagueX3.UserParticipate("0xf4267F20B463421D2cF3db534491b7920F79Ac4F", "Welcome League for Beginners", "India vs Australia WT20 WC 1st ODI", "ipfs://bafkreibligv4g6jbhrpymailuu5h2bn7nef4xngea34fwflvtxxe5rq3km", { value: ethers.utils.parseEther("1") });
 
 await leagueX3.UserParticipate("0xDeC6Df558e198A7745AcBe881f61B3506D59CFC4", "Welcome League for Beginners", "India vs Australia WT20 WC 1st ODI", "ipfs://bafkreibligv4g6jbhrpymailuu5h2bn7nef4xngea34fwflvtxxe5rq3km", { value: ethers.utils.parseEther("1") });

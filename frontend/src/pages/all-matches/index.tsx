@@ -75,81 +75,79 @@ const AllMatches = (props: any) => {
 
   return (
     <>
+      <Typography variant='h4' sx={{ mb: 2 }}>Today's Matches</Typography>
       <Grid container>
         {
           todaysMatches?.length > 0 ?
             todaysMatches.map((m: IMatchData) => {
-              return <div>
-                <Typography variant='h4' sx={{ mb: 2 }}>Today's Matches</Typography>
-                <Grid key={m.name} item xs={12} sm={6} md={4}>
-                  <Card sx={{ position: 'relative', mr: 2 }}>
-                    <CardMedia sx={{ height: '0.5rem;' }} image='/images/cards/background-user.png' />
-                    <Box sx={{ display: 'flex', justifyContent: "space-between" }}>
-                      <Box sx={{ display: 'flex', justifyContent: "center" }}>
-                        <CardContent>
-                          <Avatar
-                            alt={m.teamA}
-                            src='/images/avatars/1.png'
-                            sx={{
-                              width: 65,
-                              height: 65,
-                              border: theme => `0.25rem solid ${theme.palette.common.white}`
-                            }}
-                          />
-                          <Box sx={{ mr: 2, pt: 3, display: 'flex', flexDirection: 'column' }}>
-                            <Typography variant='h6'>INDIA</Typography>
-                          </Box>
-                        </CardContent>
-                      </Box>
-
-                      <Box sx={{ display: 'flex', justifyContent: "center" }}>
-                        <CardContent>
-                          <Avatar
-                            alt={m.teamB}
-                            src='/images/avatars/1.png'
-                            sx={{
-                              width: 65,
-                              height: 65,
-                              border: theme => `0.25rem solid ${theme.palette.common.white}`
-                            }}
-                          />
-                          <Box sx={{ mr: 2, pt: 3, display: 'flex', flexDirection: 'column' }}>
-                            <Typography variant='h6'>AUSTRALIA</Typography>
-                          </Box>
-                        </CardContent>
-                      </Box>
+              return <Grid key={m.name} item xs={12} sm={6} md={4}>
+                <Card sx={{ position: 'relative', mr: 2 }}>
+                  <CardMedia sx={{ height: '0.5rem;' }} image='/images/cards/background-user.png' />
+                  <Box sx={{ display: 'flex', justifyContent: "space-between" }}>
+                    <Box sx={{ display: 'flex', justifyContent: "center" }}>
+                      <CardContent>
+                        <Avatar
+                          alt={m.teamA}
+                          src='/images/avatars/1.png'
+                          sx={{
+                            width: 65,
+                            height: 65,
+                            border: theme => `0.25rem solid ${theme.palette.common.white}`
+                          }}
+                        />
+                        <Box sx={{ mr: 2, pt: 3, display: 'flex', flexDirection: 'column' }}>
+                          <Typography variant='h6'>INDIA</Typography>
+                        </Box>
+                      </CardContent>
                     </Box>
 
-                    <CardContent>
-                      <Box sx={{ gap: 2, display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Typography variant='h6' sx={{ whiteSpace: 'wrap', color: 'text.primary' }}>
-                          {m.name}
-                        </Typography>
-                      </Box>
-                    </CardContent>
+                    <Box sx={{ display: 'flex', justifyContent: "center" }}>
+                      <CardContent>
+                        <Avatar
+                          alt={m.teamB}
+                          src='/images/avatars/1.png'
+                          sx={{
+                            width: 65,
+                            height: 65,
+                            border: theme => `0.25rem solid ${theme.palette.common.white}`
+                          }}
+                        />
+                        <Box sx={{ mr: 2, pt: 3, display: 'flex', flexDirection: 'column' }}>
+                          <Typography variant='h6'>AUSTRALIA</Typography>
+                        </Box>
+                      </CardContent>
+                    </Box>
+                  </Box>
 
-                    <CardContent>
-                      <Box sx={{ gap: 2, display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center' }}>
-                        {/* <Typography variant='subtitle2' sx={{ whiteSpace: 'nowrap', color: 'text.primary' }}>
+                  <CardContent>
+                    <Box sx={{ gap: 2, display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Typography variant='h6' sx={{ whiteSpace: 'wrap', color: 'text.primary' }}>
+                        {m.name}
+                      </Typography>
+                    </Box>
+                  </CardContent>
+
+                  <CardContent>
+                    <Box sx={{ gap: 2, display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center' }}>
+                      {/* <Typography variant='subtitle2' sx={{ whiteSpace: 'nowrap', color: 'text.primary' }}>
                         Show Leagues
                       </Typography> */}
-                        <Button variant='contained'>
-                          <Link href={`/match-leagues/${m.name}`}>Leagues</Link>
-                        </Button>
-                        <AvatarGroup max={GetRandomInt()}>
-                          <Avatar src='/images/avatars/8.png' alt='Alice Cobb' />
-                          <Avatar src='/images/avatars/7.png' alt='Jeffery Warner' />
-                          <Avatar src='/images/avatars/3.png' alt='Howard Lloyd' />
-                          <Avatar src='/images/avatars/2.png' alt='Bettie Dunn' />
-                          <Avatar src='/images/avatars/4.png' alt='Olivia Sparks' />
-                          <Avatar src='/images/avatars/5.png' alt='Jimmy Hanson' />
-                          <Avatar src='/images/avatars/6.png' alt='Hallie Richards' />
-                        </AvatarGroup>
-                      </Box>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              </div>
+                      <Button variant='contained'>
+                        <Link href={`/match-leagues/${m.name}`}>Leagues</Link>
+                      </Button>
+                      <AvatarGroup max={GetRandomInt()}>
+                        <Avatar src='/images/avatars/8.png' alt='Alice Cobb' />
+                        <Avatar src='/images/avatars/7.png' alt='Jeffery Warner' />
+                        <Avatar src='/images/avatars/3.png' alt='Howard Lloyd' />
+                        <Avatar src='/images/avatars/2.png' alt='Bettie Dunn' />
+                        <Avatar src='/images/avatars/4.png' alt='Olivia Sparks' />
+                        <Avatar src='/images/avatars/5.png' alt='Jimmy Hanson' />
+                        <Avatar src='/images/avatars/6.png' alt='Hallie Richards' />
+                      </AvatarGroup>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
             })
             : <Alert sx={{ width: '100%', display: 'flex', justifyContent: 'center' }} severity="info">No matches scheduled for today!</Alert>
         }
