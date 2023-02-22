@@ -36,17 +36,17 @@ const navigation = (): VerticalNavItemsType => {
       path: '/upcoming-matches'
     },
     {
-      sectionTitle: 'Users'
+      sectionTitle: 'Administration'
     },
     {
-      title: 'All Users',
+      title: 'Create Match',
       icon: MdiListBox,
-      path: '/my-users'
+      path: '/create-match'
     },
     {
-      title: 'User Rewards',
+      title: 'Create League',
       icon: MdiListBox,
-      path: '/my-users'
+      path: '/create-league'
     },
     // {
     //   sectionTitle: 'Settings'

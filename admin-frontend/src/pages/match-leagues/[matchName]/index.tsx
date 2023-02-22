@@ -334,40 +334,6 @@ const UserLeagues = (props: any) => {
     })();
   }, []);
 
-  // setIsCalculating(true);
-  // if (selectedLeague && leagueLeaderboard) {
-  //   const leagueMatch = GetLeagueMatchFromLeagueName(selectedLeague?.leagueName);
-
-  //   for (const ll of leagueLeaderboard) {
-  //     const p = GetRandomPointsForUser();
-  //     const r1 = await calculateLeagueLeaderboard(leagueMatch.league, leagueMatch.match, ll.userAddress, p);
-  //     console.log("===== calculate resp: ", r1);
-  //   }
-  //   setModalOpen(false);
-  //   setIsCalculating(false);
-
-
-
-  // if (resp) {
-  //   var toBeSorted: ILeaderboardData[] = [];
-  //   for (var i = 0; i < resp.length; i++) {
-  //     toBeSorted.push(resp[i]);
-  //   }
-  //   toBeSorted.sort(function (a: ILeaderboardData, b: ILeaderboardData) {
-  //     return b.totalPoints - a.totalPoints;
-  //   });
-  //   // array is sorted now
-  //   var localSorted: ISortedLeaderboardData[] = []
-  //   for (var i = 0; i < toBeSorted.length; i++) {
-  //     localSorted.push(createSortedData(toBeSorted[i].userAddress, toBeSorted[i].totalPoints, i + 1));
-  //   }
-  //   setSortedLeaderboard(localSorted);
-  //   setModalOpen(true);
-  //   setLeagueLeaderboard(toBeSorted);
-  //   setSelectedLeague(league);
-  //   console.log("======= leagueLeaderboard are: ", sortedLeaderboard);
-  //   // setShowSortedLeaderboard(true);
-
   return (
     <div>
       <Modal

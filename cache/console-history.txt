@@ -1,3 +1,14 @@
+await leagueX3.GetLeagues("India vs Australia WT20 WC 1st ODI");
+await leagueX3.CreateUpdateLeague("India vs Australia WT20 WC 1st ODI", "Millionaire Elastic League", "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", "ipfs://bafkreidud6zwwtqpmah76oig2lnpguy6grlrwxmnw763xl7vsvfvuwgtcq",  "INDIA", "AUSTRALIA", false, false, 10, 1);
+await leagueX3.CreateUpdateLeague("India vs Australia WT20 WC 1st ODI", "Welcome League for Beginners", "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", "ipfs://bafkreidud6zwwtqpmah76oig2lnpguy6grlrwxmnw763xl7vsvfvuwgtcq",  "INDIA", "AUSTRALIA", false, false, 20, 1);
+const leagueX3 = await l.attach("0xD7cF05143e9A712B032fE4c1Db1Df5ED2E9468c6");
+const l = await ethers.getContractFactory("LeagueX3");
+await dst.GetMatches("1676764800");
+await dst.CreateUpdateMatches("1676764800", "India vs Australia WT20 WC 1st ODI", "INDIA", "AUSTRALIA", 1676592000, 1676678400, "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", false, true, false);
+await dst.CreateUpdateMatches("1676764800", "India vs Australia Border Gavaskar Trophy 2nd Test Match", "INDIA", "AUSTRALIA", 1676592000, 1676851200, "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", false, true, false);
+await dst.GetMatches("1676764800");
+const dst = await d.attach("0x6A4c21CcA84905B95Ba26F109Aa294783CaC1bcC");
+const d = await ethers.getContractFactory("Datastore");
 await r.GetUserRewards("0xDeC6Df558e198A7745AcBe881f61B3506D59CFC4");
 await r.GetUserRewards("0xf4267F20B463421D2cF3db534491b7920F79Ac4F");
 await r.GetUserRewards("0xDeC6Df558e198A7745AcBe881f61B3506D59CFC4");
