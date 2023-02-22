@@ -22,6 +22,7 @@ export async function FetchDataFromIpfsLink(cid: string) {
         const resp = await fetch(finalUrl);
         return await resp.json();
     }
+    return "";
 }
 
 export async function UploadNftJson(name: string, description: string, release: string, director: string, image: string, metadata: string) {
