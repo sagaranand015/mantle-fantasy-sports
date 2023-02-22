@@ -8,18 +8,14 @@ Blockchain is the ready solution to all the centralization and trust issues. Fan
 To be precise, using blockchain will help in retaining reliability and transparency of the industry in a decentralized manner along with giving the users a fair game experience.
 
 ### Using Mantle in Gaming Experience (Submission MVP)
-From the (Game7 Report)[https://cdn.game7.io/reports/Game-Developer-Report-by-Game7.pdf], 
+From the [Game7 Report](https://cdn.game7.io/reports/Game-Developer-Report-by-Game7.pdf), 
     1. Synchronizing on-chain/off-chain data can be a troublesome task. Because there is no standard, game devs are creating standalone solutions.
     2. There exists no framework to manage and relay transactions across L1 and L2 chains for heavy compuatations required by game devs. 
 
 Our Solution plans to remediate the above 2 game development pain points by creating a demo framework using L1 and L2 chains. On a high level, the solution proposes to use the Mantle SDK to offload computationally heavy transactions to an L2 chain (where the gas fees are comparatively lower), while keeping the tracibility of all computational transactions, and relaying the results over the to L1 chain. 
 The following high level diagram explains the framework approach and the usage of mantle SDK with both L1 and L2 chains. 
 
-<object data="https://drive.google.com/file/d/1zDG664cy-aAiEZ4Q_26ameDeKRoCaJx6/view?usp=share_link" type="application/pdf" width="700px" height="700px">
-    <embed src="https://drive.google.com/file/d/1zDG664cy-aAiEZ4Q_26ameDeKRoCaJx6/view?usp=share_link">
-        <p>This browser does not support PDFs. Please download the PDF to view it: <a href="http://yoursite.com/the.pdf">Download PDF</a>.</p>
-    </embed>
-</object>
+![Framework Architecture](./docs/mantle-hack.jpg)
 
 
 
