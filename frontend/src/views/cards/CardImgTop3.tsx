@@ -4,20 +4,20 @@ import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 
-const CardImgTop = () => {
+const CardImgTop3 = () => {
   return (
     <Card>
-      <CardMedia sx={{ height: '10.5625rem' }} image='/images/cards/glass-house.png' />
+      <CardMedia sx={{ height: '10.5625rem' }} image='/images/cards/watch-on-hand.jpg' />
       <CardContent>
         <Typography variant='h6' sx={{ marginBottom: 2 }}>
-          Blockchain based Algorithm
+          Ingenious Engineering!
         </Typography>
         <Typography variant='body2'>
-          LeagueX3 is entirely based on blockchain and we use a combination of L1 and L2 networks, powered by the Mantle SDK to keep our gas costs as low as possible.
+          We make use of the Mantle SDK to perform computationally heavy transactions on the L2 chain, making sure all calculations for all competitions are tracable at all times.
         </Typography>
       </CardContent>
     </Card>
   )
 }
 
-export default CardImgTop
+export default CardImgTop3;

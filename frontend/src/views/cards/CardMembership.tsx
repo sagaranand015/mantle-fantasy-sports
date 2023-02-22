@@ -13,6 +13,7 @@ import TrendingUp from 'mdi-material-ui/TrendingUp'
 import StarOutline from 'mdi-material-ui/StarOutline'
 import AccountOutline from 'mdi-material-ui/AccountOutline'
 import LockOpenOutline from 'mdi-material-ui/LockOpenOutline'
+import { useAuth } from 'src/configs/authProvider'
 
 // Styled Box component
 const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
@@ -22,19 +23,20 @@ const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
 }))
 
 const CardMembership = () => {
+  const { currentAccount, setCurrentAccount } = useAuth();
   return (
     <Card>
       <Grid container spacing={6}>
         <Grid item xs={12} sm={7}>
           <CardContent sx={{ padding: theme => `${theme.spacing(3.25, 5.75, 6.25)} !important` }}>
             <Typography variant='h6' sx={{ marginBottom: 3.5 }}>
-              Lifetime Membership
+              LeagueX3
             </Typography>
             <Typography variant='body2'>
-              Here, I focus on a range of items and features that we use in life without giving them a second thought
-              such as Coca Cola, body muscles and holding ones own breath. Though, most of these notes are not
-              fundamentally necessary, they are such that you can use them for a good laugh, at a drinks party or for
-              picking up women or men.
+              We plan to bring all the fun of Fantasy sports to the Open Web and leverage the most rapidly growing and lucrative online industry.
+            </Typography>
+            <Typography variant='h5' sx={{ mt: 5 }}>
+              Get Playing!
             </Typography>
             <Divider sx={{ marginTop: 6.5, marginBottom: 6.75 }} />
             <Grid container spacing={4}>
@@ -42,22 +44,22 @@ const CardMembership = () => {
                 <StyledBox>
                   <Box sx={{ mb: 6.75, display: 'flex', alignItems: 'center' }}>
                     <LockOpenOutline sx={{ color: 'primary.main', marginRight: 2.75 }} fontSize='small' />
-                    <Typography variant='body2'>Full Access</Typography>
+                    <Typography variant='body2'>On EVM</Typography>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <AccountOutline sx={{ color: 'primary.main', marginRight: 2.75 }} fontSize='small' />
-                    <Typography variant='body2'>15 Members</Typography>
+                    <Typography variant='body2'>Win Cryptos</Typography>
                   </Box>
                 </StyledBox>
               </Grid>
               <Grid item xs={12} sm={7}>
                 <Box sx={{ mb: 6.75, display: 'flex', alignItems: 'center' }}>
                   <StarOutline sx={{ color: 'primary.main', marginRight: 2.75 }} fontSize='small' />
-                  <Typography variant='body2'>Access all Features</Typography>
+                  <Typography variant='body2'>Win Exclusive NFTs</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <TrendingUp sx={{ color: 'primary.main', marginRight: 2.75 }} fontSize='small' />
-                  <Typography variant='body2'>Lifetime Free Update</Typography>
+                  <Typography variant='body2'>No Access Fee</Typography>
                 </Box>
               </Grid>
             </Grid>
@@ -82,17 +84,17 @@ const CardMembership = () => {
           >
             <Box>
               <Box sx={{ mb: 3.5, display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
-                <Typography variant='h6'>$</Typography>
+                {/* <Typography variant='h6'>BIT</Typography> */}
                 <Typography variant='h6' sx={{ lineHeight: 1, fontWeight: 600, fontSize: '3.75rem !important' }}>
-                  899
+                  10
                 </Typography>
-                <Typography variant='h6'>USD</Typography>
+                <Typography variant='h6'>BIT</Typography>
               </Box>
               <Typography variant='body2' sx={{ mb: 13.75, display: 'flex', flexDirection: 'column' }}>
-                <span>5 Tips For Offshore</span>
-                <span>Software Development</span>
+                <span>Start with as low as</span>
+                <span>10 BIT tokens</span>
               </Typography>
-              <Button variant='contained'>Contact Now</Button>
+              <Button variant='contained' onClick={setCurrentAccount}>Connect Wallet Now</Button>
             </Box>
           </CardContent>
         </Grid>

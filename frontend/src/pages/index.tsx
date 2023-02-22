@@ -26,6 +26,7 @@ import { useEffect, useState } from 'react'
 import HelpNotificationCard from 'src/views/cards/HelpNotificationCard'
 import AllMatches from './all-matches'
 import PastMatches from './past-matches'
+import HomePage from './homepage'
 
 const Dashboard = (props: any) => {
   const { currentAccount, setCurrentAccount } = useAuth()
@@ -49,7 +50,10 @@ const Dashboard = (props: any) => {
         </div>
       ) :
         (
-          <HelpNotificationCard heading='Connect Wallet' content='Please connect your wallet to continue!' clickButtonText='Connect Wallet' clickButton={setCurrentAccount} />
+          <div>
+
+            <HomePage />
+          </div>
         )
       }
     </div >
