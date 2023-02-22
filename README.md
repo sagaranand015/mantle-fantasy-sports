@@ -35,18 +35,12 @@ This workflow is available in the admin app and the connected account can be use
 Note: Both these transactions have been enabled manually for demonstration purposes. 
 
 ## Deployed Smart Contracts
-1. Datastore Smart Contract containing the matches and leagues information
-```
-[0x2c7aF0B5a7cd6E777E14F9CB6213195f5aD450B1](https://explorer.testnet.mantle.xyz/address/0x2c7aF0B5a7cd6E777E14F9CB6213195f5aD450B1)
-```
-2. League Smart Contract responsible for user participation and managing leaderboards for a league
-```
-[0x656F7c6dc0747AC8e64BF013a14e56F7dA68308A](https://explorer.testnet.mantle.xyz/address/0x656F7c6dc0747AC8e64BF013a14e56F7dA68308A)
-```
-3. LeagueRewards Smart Contract responsible for managing League Reward NFTs and other winnings for the participating users
-```
-[0x700E9BeBA6db645380d9FC59C1b25509B41FEa7a](https://explorer.testnet.mantle.xyz/address/0x700E9BeBA6db645380d9FC59C1b25509B41FEa7a)
-```
+1. Datastore Smart Contract containing the matches and leagues information: [Datstore Contract: 0x2c7aF0B5a7cd6E777E14F9CB6213195f5aD450B1](https://explorer.testnet.mantle.xyz/address/0x2c7aF0B5a7cd6E777E14F9CB6213195f5aD450B1)
+
+2. League Smart Contract responsible for user participation and managing leaderboards for a league: [LeagueX3 Core Contract 0x656F7c6dc0747AC8e64BF013a14e56F7dA68308A](https://explorer.testnet.mantle.xyz/address/0x656F7c6dc0747AC8e64BF013a14e56F7dA68308A)
+
+3. LeagueRewards Smart Contract responsible for managing League Reward NFTs and other winnings for the participating users: [League Rewards Contract 0x700E9BeBA6db645380d9FC59C1b25509B41FEa7a](https://explorer.testnet.mantle.xyz/address/0x700E9BeBA6db645380d9FC59C1b25509B41FEa7a)
+
 
 ## Running the client frontend
 Clone this repo and execute the following commands to run the client frontend
