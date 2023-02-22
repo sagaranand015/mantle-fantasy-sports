@@ -10,6 +10,11 @@ Blockchain is the ready solution to all the centralization and trust issues. Fan
 
 To be precise, using blockchain will help in retaining reliability and transparency of the industry in a decentralized manner along with giving the users a fair game experience.
 
+### Video Demo Link
+```
+https://youtu.be/BTXoP9JNRHU
+```
+
 ### User App Demo
 ```
 https://mantle-fantasy-sports.vercel.app/
