@@ -76,6 +76,11 @@ interface ILeagueData {
   squadLimit: number;
 };
 
+interface IUserLeagueData {
+  leagueName: string;
+  squads: string;
+};
+
 interface ISquadData {
   squad: any;
   squadLink: string;
@@ -93,6 +98,7 @@ const AllMatcheLeagues = (props: any) => {
   }
 
   const [matchLeagues, setMatchLeagues] = useState<ILeagueData[]>([]);
+  const [userLeagues, setUserLeagues] = useState<IUserLeagueData[]>([]);
   const { currentAccount, setCurrentAccount } = useAuth();
   const [pageDataLoaded, setPageDataLoaded] = useState(false);
 
@@ -119,6 +125,15 @@ const AllMatcheLeagues = (props: any) => {
     const resp = await lContract.GetLeagues(matchName);
     console.log("====== getMatchLeagues contract resp: ", resp);
     return resp;
+  }
+
+  async function getUserLeagues() {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const lContract = new ethers.Contract(LEAGUE_CONTRACT, LeagueAbi.abi, signer);
+    const resp = await lContract.GetAllUserParticipation(currentAccount);
+    console.log("====== getMatchLeagues contract resp: ", resp);
+    return resp[1];
   }
 
   async function participateWithContractCall(leagueName: string, squadLink: string) {
@@ -151,12 +166,28 @@ const AllMatcheLeagues = (props: any) => {
     setSquadData(all_squads);
   }
 
+  function checkUserParticipationInLeague(leagueName: string, matchName: string): boolean {
+    const fName = leagueName + ";;;" + matchName;
+    if (userLeagues) {
+      for (var a of userLeagues) {
+        console.log("===== comparison: ", a.leagueName, fName);
+        if (a.leagueName == fName) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   useEffect(() => {
     (async () => {
       if (matchName) {
         const mLeagues = await getMatchLeagues(matchName);
         setMatchLeagues(mLeagues);
         console.log("======= matchLeagues are: ", matchLeagues);
+
+        const userLs = await getUserLeagues();
+        setUserLeagues(userLs);
       }
       await GetAllUserDemoSquads();
       setPageDataLoaded(true);
@@ -271,10 +302,15 @@ const AllMatcheLeagues = (props: any) => {
                       </CardContent>
                       <CardActions className='card-action-dense'>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                          <Button onClick={() => ParticipateInLeague(ml)}>
-                            <CartPlus fontSize='small' sx={{ marginRight: 2 }} />
-                            Participate with {ml.leaguePrice} BIT
-                          </Button>
+                          {!checkUserParticipationInLeague(ml.name, ml.matchName) ?
+                            <Button onClick={() => ParticipateInLeague(ml)}>
+                              <CartPlus fontSize='small' sx={{ marginRight: 2 }} />
+                              Participate with {ml.leaguePrice} BIT
+                            </Button>
+                            :
+                            <Button>
+                              Already Participated
+                            </Button>}
                           <IconButton
                             id='long-button'
                             aria-label='share'

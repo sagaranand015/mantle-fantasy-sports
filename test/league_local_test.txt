@@ -6,6 +6,8 @@ LeagueX3 SC deployed to 0x656F7c6dc0747AC8e64BF013a14e56F7dA68308A
 const l = await ethers.getContractFactory("LeagueX3");
 const leagueX3 = await l.attach("0x656F7c6dc0747AC8e64BF013a14e56F7dA68308A");
 
+await leagueX3.GetAllUserParticipation("0xf4267F20B463421D2cF3db534491b7920F79Ac4F");
+
 == on 21st feb 
 await leagueX3.CreateUpdateLeague("India vs Australia Border Gavaskar Trophy 1st ODI Match", "Infinity Battle League ", "ipfs://bafybeihbmt4n5gr6qifjhu6haxrx433rzmvpw4smvywt2xf4nn3gqhvckq", "ipfs://bafkreidud6zwwtqpmah76oig2lnpguy6grlrwxmnw763xl7vsvfvuwgtcq",  "INDIA", "AUSTRALIA", false, false, 10, 1);
 
