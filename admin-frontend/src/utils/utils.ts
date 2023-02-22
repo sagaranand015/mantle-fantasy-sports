@@ -68,7 +68,7 @@ export function shortenAddress(address: string) {
     return "";
 }
 
-export function GetDateFromEpochTs(epochTs: BigNumber) {
+export function GetDateFromEpochTs(epochTs: any) {
     var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
     d.setUTCSeconds(epochTs.toNumber());
     return d.toDateString();

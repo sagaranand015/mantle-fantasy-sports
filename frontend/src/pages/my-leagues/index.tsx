@@ -148,19 +148,21 @@ const UserLeagues = (props: any) => {
     console.log("nothing for now");
   };
 
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = provider.getSigner();
-  const lContract = new ethers.Contract(LEAGUE_CONTRACT, LeagueAbi.abi, signer);
-
   const router = useRouter();
 
   async function getUserLeagues() {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const lContract = new ethers.Contract(LEAGUE_CONTRACT, LeagueAbi.abi, signer);
     const resp = await lContract.GetAllUserParticipation(currentAccount);
     console.log("====== getUserLeagues contract resp: ", resp);
     return resp[1];
   }
 
   async function getLeagueLeaderboard(leagueName: string, matchName: string) {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const lContract = new ethers.Contract(LEAGUE_CONTRACT, LeagueAbi.abi, signer);
     const resp = await lContract.GetLeagueLeaderboard(leagueName, matchName);
     console.log("====== getLeagueLeaderboard contract resp: ", resp);
     return resp;

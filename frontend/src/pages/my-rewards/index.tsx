@@ -75,12 +75,10 @@ const UserRewards = (props: any) => {
   const { currentAccount, setCurrentAccount } = useAuth();
   const [userRewards, setUserRewards] = useState<IUserRewardData[]>([]);
 
-
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = provider.getSigner();
-  const rewardsContract = new ethers.Contract(REWARDS_CONTRACT, RewardsAbi.abi, signer);
-
   async function getUserRewards(user_address: string) {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const rewardsContract = new ethers.Contract(REWARDS_CONTRACT, RewardsAbi.abi, signer);
     const resp = await rewardsContract.GetUserRewards(user_address);
     console.log("====== contract GetUserRewards resp: ", resp);
     return resp;

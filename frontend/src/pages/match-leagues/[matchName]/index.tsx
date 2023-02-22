@@ -109,20 +109,22 @@ const AllMatcheLeagues = (props: any) => {
     setSelectedSquad(event.target.value);
   };
 
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = provider.getSigner();
-  const lContract = new ethers.Contract(LEAGUE_CONTRACT, LeagueAbi.abi, signer);
-
   const router = useRouter();
   const matchName = router.query.matchName as string
 
   async function getMatchLeagues(matchName: string) {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const lContract = new ethers.Contract(LEAGUE_CONTRACT, LeagueAbi.abi, signer);
     const resp = await lContract.GetLeagues(matchName);
     console.log("====== getMatchLeagues contract resp: ", resp);
     return resp;
   }
 
   async function participateWithContractCall(leagueName: string, squadLink: string) {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const lContract = new ethers.Contract(LEAGUE_CONTRACT, LeagueAbi.abi, signer);
     if (matchName) {
       const resp = await lContract.UserParticipate(currentAccount, leagueName, matchName, squadLink, { value: ethers.utils.parseEther("20") });
       console.log("====== participateWithContractCall contract resp: ", resp);

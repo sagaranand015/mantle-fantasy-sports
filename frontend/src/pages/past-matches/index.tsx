@@ -55,11 +55,10 @@ const PastMatches = (props: any) => {
   const [todaysMatches, setTodaysMatches] = useState<IMatchData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const provider = new ethers.providers.Web3Provider(window?.ethereum);
-  const signer = provider.getSigner();
-  const dsContract = new ethers.Contract(DATASTORE_CONTRACT, DatastoreAbi.abi, signer);
-
   async function getAllMatchesForDate(dateStr: string) {
+    const provider = new ethers.providers.Web3Provider(window?.ethereum);
+    const signer = provider.getSigner();
+    const dsContract = new ethers.Contract(DATASTORE_CONTRACT, DatastoreAbi.abi, signer);
     const resp = await dsContract.GetMatches(dateStr);
     console.log("====== contract resp: ", resp, dateStr);
     return resp;

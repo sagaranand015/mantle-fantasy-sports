@@ -164,27 +164,31 @@ const UserLeagues = (props: any) => {
     console.log("nothing for now");
   };
 
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = provider.getSigner();
-  const lContract = new ethers.Contract(LEAGUE_CONTRACT, LeagueAbi.abi, signer);
-  const rewardsContract = new ethers.Contract(REWARDS_CONTRACT, LeagueRewardsAbi.abi, signer);
-
   const router = useRouter();
   const matchName = router.query.matchName as string
 
   async function getAllMatchLeagues() {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const lContract = new ethers.Contract(LEAGUE_CONTRACT, LeagueAbi.abi, signer);
     const resp = await lContract.GetLeagues(matchName);
     console.log("====== getMatchLeagues contract resp: ", resp);
     return resp;
   }
 
   async function MintNFTReward(leagueName: string, matchName: string, user_address: string, title: string, nftIpfsLink: string, nftImg: string) {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const rewardsContract = new ethers.Contract(REWARDS_CONTRACT, LeagueRewardsAbi.abi, signer);
     const resp = await rewardsContract.CreateNft(leagueName, matchName, title, nftIpfsLink, nftImg, user_address);
     console.log("====== MintNFTReward contract resp: ", resp);
     return resp;
   }
 
   async function getLeagueLeaderboard(leagueName: string, matchName: string) {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const lContract = new ethers.Contract(LEAGUE_CONTRACT, LeagueAbi.abi, signer);
     const resp = await lContract.GetLeagueLeaderboard(leagueName, matchName);
     console.log("====== getLeagueLeaderboard contract resp: ", resp);
     return resp;
@@ -210,12 +214,18 @@ const UserLeagues = (props: any) => {
   }
 
   async function calculateLeagueLeaderboard(leagueName: string, matchName: string, objs: ILeaderboardData[]) {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const lContract = new ethers.Contract(LEAGUE_CONTRACT, LeagueAbi.abi, signer);
     const resp = await lContract.CalculateLeaderboard(leagueName, matchName, objs);
     console.log("====== calculateLeagueLeaderboard contract resp: ", resp);
     return resp;
   }
 
   async function finalizeLeagueLeaderboard(leagueName: string, matchName: string, objs: ILeaderboardData[]) {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const lContract = new ethers.Contract(LEAGUE_CONTRACT, LeagueAbi.abi, signer);
     const resp = await lContract.SetFinalLeaderboard(leagueName, matchName, objs);
     console.log("====== finalizeLeagueLeaderboard contract resp: ", resp);
     return resp;

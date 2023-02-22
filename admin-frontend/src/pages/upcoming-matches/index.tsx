@@ -55,11 +55,11 @@ const AllMatches = (props: any) => {
   const [todaysMatches, setTodaysMatches] = useState<IMatchData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = provider.getSigner();
-  const dsContract = new ethers.Contract(DATASTORE_CONTRACT, DatastoreAbi.abi, signer);
 
   async function getAllMatchesForDate(dateStr: string) {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const dsContract = new ethers.Contract(DATASTORE_CONTRACT, DatastoreAbi.abi, signer);
     const resp = await dsContract.GetMatches(dateStr);
     console.log("====== contract resp: ", resp, dateStr);
     return resp;
@@ -143,7 +143,7 @@ const AllMatches = (props: any) => {
                         <Typography variant='h6' sx={{ whiteSpace: 'wrap', color: 'text.primary' }}>
                           {m.name}
                         </Typography>
-                        <Typography variant='p' sx={{ whiteSpace: 'wrap', color: 'text.primary' }}>
+                        <Typography variant='body2' sx={{ whiteSpace: 'wrap', color: 'text.primary' }}>
                           Played On: <b>{GetDateFromEpochTs(m.startDateTime)}</b>
                         </Typography>
                       </Box>
