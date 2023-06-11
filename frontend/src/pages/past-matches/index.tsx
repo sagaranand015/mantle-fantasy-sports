@@ -65,7 +65,8 @@ const PastMatches = (props: any) => {
   }
 
   async function getPreviousMatches() {
-    const todayTs = GetEpochSecsForToday();
+    // const todayTs = GetEpochSecsForToday();
+    const todayTs = 1677542400;
     var finalResp: IMatchData[] = [];
     for (var i = 1; i <= 5; i++) {
       const prevMatchResp = await getAllMatchesForDate(String(todayTs - (86400 * i)));

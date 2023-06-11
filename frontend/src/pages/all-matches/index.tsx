@@ -53,9 +53,6 @@ const AllMatches = (props: any) => {
   const { currentAccount, setCurrentAccount } = useAuth();
   const [todaysMatches, setTodaysMatches] = useState<IMatchData[]>([]);
 
-
-
-
   async function getAllMatches(dateStr: string) {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
